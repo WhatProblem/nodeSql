@@ -1,0 +1,25 @@
+{
+  "name": "sqlserver",
+  "version": "1.0.0",
+  "description": "mysql express node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/whatprolem"
+  },
+  "keywords": [
+    "mysql",
+    "express"
+  ],
+  "author": "ws",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "mysql": "^2.15.0"
+  }
+}
