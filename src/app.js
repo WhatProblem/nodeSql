@@ -1,20 +1,12 @@
 const express = require('express');
 const app = express();
-const router = app.router();
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const testData = [
-  {
-    game_id: 3,
-    game_role: '狗头',
-    game_power: 13000,
-    game_total: 600,
-    game_fav: 0,
-    user_id: 1
-  }
-];
+// api接口
+const apiRouter = require('./api.js');
+
 
 // 跨域配置
 app.all('*', function (req, res, next) {
@@ -26,7 +18,8 @@ app.all('*', function (req, res, next) {
     next();
 });
 
+app.use(apiRouter);
 
 app.listen(3000, () => {
-  console.log('server build!');
+  console.log('application run port: 3000');
 })
