@@ -5,4 +5,6 @@ module.exports = {
   insertMoreSql: 'INSERT INTO games(`game_id`,`game_role`,`game_power`,`game_total`,`game_fav`,`user_id`) VALUES ?', // 新增多条数据
   updateSql: 'UPDATE games SET game_role = ?, game_power = ?, game_total = ?, game_fav = ? WHERE game_id = ? AND user_id = ?', // 修改语句
   deleteSql: 'DELETE FROM games WHERE game_id = ? AND user_id = ?', // 删除语句
+  totalCounts: 'SELECT *, COUNT(*) FROM games WHERE game_fav = ? AND user_id = ?', // 获取符合条件的总数
+  getDataAndTotals: 'SELECT SQL_CALC_FOUND_ROWS * FROM games WHERE user_id = ? AND game_fav = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取符合条件数据及总数
 }
