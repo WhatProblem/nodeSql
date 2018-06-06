@@ -93,5 +93,39 @@ module.exports = {
         }
       })
     }
+  },
+
+  // 获取符合条件的总条数
+  getTotalCounts(req, res) {
+    if (req.query) {
+      let sqlInfo = sql.totalCounts;
+      let reqObj = req.query;
+      let ival = [reqObj.game_fav, reqObj.user_id];
+      commonSql.poolConn(sqlInfo, ival, (result) => {
+        if (result) {
+          statusCode.data = null;
+          statusCode.data = result[0]['COUNT(*)'];
+          res.send(statusCode);
+        }
+      })
+    }
+  },
+
+  // 获取符合条件数据与总数
+  getDataAndTotals(req, res) {
+    if (req.query) {
+      let sqlInfo = sql.getDataAndTotals;
+      let reqObj = req.query;
+      let limitTotals = parseInt(reqObj.pagesTotal); // 每次查询总数
+      let limitStart = parseInt((reqObj.pagesIndex - 1) * limitTotals); // 查询开始位置
+      let ival = [reqObj.user_id, reqObj.game_fav, limitStart, limitTotals];
+      commonSql.poolConn(sqlInfo, ival, (result) => {
+        if (result) {
+          statusCode.data = null;
+          statusCode.data = result;
+          res.send(statusCode);
+        }
+      })
+    }
   }
 }
