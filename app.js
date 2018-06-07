@@ -5,7 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 // api接口
-const apiRouter = require('./api.js');
+const apiRouter = require('./src/api.js');
 
 
 // 跨域配置
