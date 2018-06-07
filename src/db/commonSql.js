@@ -40,7 +40,8 @@ module.exports = {
           console.log('this is error: ' + err);
           return;
         } else {
-          console.log(results);
+          // console.log(results);
+          console.log('get data successfully!');
           callback(results);
         }
         conn.release();

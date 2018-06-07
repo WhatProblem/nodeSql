@@ -11,11 +11,11 @@ const sql = require('../db/sql.js');
 // 自定义状态码
 let statusCode = {
   code: 200,
-  data: null,
+  data: {},
   msg: 'successfully!'
 };
 
-module.exports = {
+const sqlFun = {
   // 查询所有英雄数据
   getAllGameRoleData(req, res) {
     if (req.query.user_id) {
@@ -24,8 +24,8 @@ module.exports = {
 
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          statusCode.data = null;
-          statusCode.data = result;
+          statusCode.data = {};
+          statusCode.data.data = result;
           res.send(statusCode);
         }
       });
@@ -39,8 +39,8 @@ module.exports = {
       let ival = [req.query.user_id, req.query.game_fav];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          statusCode.data = null;
-          statusCode.data = result;
+          statusCode.data = {};
+          statusCode.data.data = result;
           res.send(statusCode);
         }
       })
@@ -96,18 +96,21 @@ module.exports = {
   },
 
   // 获取符合条件的总条数
-  getTotalCounts(req, res) {
+  getTotalCounts(req) {
     if (req.query) {
       let sqlInfo = sql.totalCounts;
       let reqObj = req.query;
       let ival = [reqObj.game_fav, reqObj.user_id];
-      commonSql.poolConn(sqlInfo, ival, (result) => {
-        if (result) {
-          statusCode.data = null;
-          statusCode.data = result[0]['COUNT(*)'];
-          res.send(statusCode);
-        }
-      })
+      return new Promise((resolve, reject) => {
+        commonSql.poolConn(sqlInfo, ival, (result) => {
+          if (result) {
+            // statusCode.data = {};
+            // statusCode.data = result[0]['COUNT(*)'];
+            // res.send(statusCode);
+            resolve(result[0]['COUNT(*)']);
+          }
+        });
+      });
     }
   },
 
@@ -121,11 +124,16 @@ module.exports = {
       let ival = [reqObj.user_id, reqObj.game_fav, limitStart, limitTotals];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          statusCode.data = null;
-          statusCode.data = result;
-          res.send(statusCode);
+          sqlFun.getTotalCounts(req).then((respTotals) => {
+            statusCode.data = {};
+            statusCode.data.totals = respTotals;
+            statusCode.data.data = result;
+            res.send(statusCode);
+          });
         }
       })
     }
   }
 }
+
+module.exports = sqlFun;
