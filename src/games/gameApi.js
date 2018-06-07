@@ -39,9 +39,12 @@ const sqlFun = {
       let ival = [req.query.user_id, req.query.game_fav];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          statusCode.data = {};
-          statusCode.data.data = result;
-          res.send(statusCode);
+          sqlFun.getTotalCounts(req).then((respTotals) => {
+            statusCode.data = {};
+            statusCode.data.totals = respTotals;
+            statusCode.data.data = result;
+            res.send(statusCode);
+          });
         }
       })
     }
