@@ -37,12 +37,12 @@ const sqlFun = {
     if (req.query.user_id) {
       let reqObj = req.query;
       let sqlInfo = sql.selectSql; // 查询语句
-      let limitTotals = parseInt(reqObj.pagesTotal); // 每次查询总数
-      let limitStart = parseInt((reqObj.pagesIndex - 1) * limitTotals); // 查询开始位置
+      let limitTotals = parseInt(reqObj.pages_total); // 每次查询总数
+      let limitStart = parseInt((reqObj.pages_index - 1) * limitTotals); // 查询开始位置
       let ival = [reqObj.user_id, limitStart, limitTotals];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          sqlFun.getAllCounts(req).then((respTotals)=>{
+          sqlFun.getAllCounts(req).then((respTotals) => {
             statusCode.data = {};
             statusCode.data.totals = respTotals;
             statusCode.data.data = result;
@@ -143,8 +143,8 @@ const sqlFun = {
     if (req.query) {
       let sqlInfo = sql.getDataAndTotals;
       let reqObj = req.query;
-      let limitTotals = parseInt(reqObj.pagesTotal); // 每次查询总数
-      let limitStart = parseInt((reqObj.pagesIndex - 1) * limitTotals); // 查询开始位置
+      let limitTotals = parseInt(reqObj.pages_total); // 每次查询总数
+      let limitStart = parseInt((reqObj.pages_index - 1) * limitTotals); // 查询开始位置
       let ival = [reqObj.user_id, reqObj.game_fav, limitStart, limitTotals];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
@@ -156,6 +156,33 @@ const sqlFun = {
           });
         }
       })
+    }
+  },
+
+  // 模糊查询
+  getSearchRole(req, res) {
+    if (req.query) {
+      let reqObj = req.query;
+      new Promise((resolve, reject) => {
+        let sqlInfo = sql.searchSql;
+        let ival = [reqObj.user_id, '%' + reqObj.game_role + '%'];
+        commonSql.poolConn(sqlInfo, ival, (result) => {
+          let respTotals = result['length'];
+          resolve(respTotals);
+        });
+      }).then((resp) => {
+        let sqlInfo = sql.searchSql + ' LIMIT ?, ?';
+        let limitTotals = parseInt(reqObj.pages_total); // 每次查询总数
+        let limitStart = parseInt((reqObj.pages_index - 1) * limitTotals); // 查询开始位置
+        let ival = [reqObj.user_id, '%' + reqObj.game_role + '%', limitStart, limitTotals];
+        commonSql.poolConn(sqlInfo, ival, (result) => {
+          let searchTotals = resp;
+          statusCode.data = {};
+          statusCode.data.totals = searchTotals;
+          statusCode.data.data = result;
+          res.send(statusCode);
+        });
+      });
     }
   }
 }

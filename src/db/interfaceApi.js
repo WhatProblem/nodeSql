@@ -8,4 +8,5 @@ module.exports = {
   deleteGameRole: '/game/deleteGameRole', // 删除一条游戏人物数据,post
   totalCounts: '/game/totalCounts', // 获取符合条件的总数，get
   getDataAndTotals: '/game/getDataAndTotals', // 获取符合条件数据与总数，get
+  searchGameRole: '/game/searchGameRole', // 模糊查询，post
 }
