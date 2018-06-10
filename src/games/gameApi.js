@@ -16,17 +16,38 @@ let statusCode = {
 };
 
 const sqlFun = {
+  // 所有数据
+  getAllCounts(req) {
+    if (req.query) {
+      let sqlInfo = sql.AllCounts;
+      let reqObj = req.query;
+      let ival = [reqObj.user_id];
+      return new Promise((resolve, reject) => {
+        commonSql.poolConn(sqlInfo, ival, (result) => {
+          if (result) {
+            resolve(result[0]['COUNT(*)']);
+          }
+        });
+      });
+    }
+  },
+
   // 查询所有英雄数据
   getAllGameRoleData(req, res) {
     if (req.query.user_id) {
+      let reqObj = req.query;
       let sqlInfo = sql.selectSql; // 查询语句
-      let ival = [req.query.user_id]; // 用户id
-
+      let limitTotals = parseInt(reqObj.pagesTotal); // 每次查询总数
+      let limitStart = parseInt((reqObj.pagesIndex - 1) * limitTotals); // 查询开始位置
+      let ival = [reqObj.user_id, limitStart, limitTotals];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
-          statusCode.data = {};
-          statusCode.data.data = result;
-          res.send(statusCode);
+          sqlFun.getAllCounts(req).then((respTotals)=>{
+            statusCode.data = {};
+            statusCode.data.totals = respTotals;
+            statusCode.data.data = result;
+            res.send(statusCode);
+          })
         }
       });
     }

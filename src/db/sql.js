@@ -1,5 +1,6 @@
 module.exports = {
-  selectSql: 'SELECT * FROM games WHERE user_id = ?', // 查询所有数据
+  selectSql: 'SELECT * FROM games WHERE user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 查询所有数据
+  AllCounts: 'SELECT *, COUNT(*) FROM games WHERE user_id = ?', // 获取符合条件的总数
   selectFavDegree: 'SELECT * FROM games WHERE user_id = ? AND game_fav = ?', // 查询不同喜欢等级的数据
   insertSql: 'INSERT INTO games SET ?', // 新增单条数据
   insertMoreSql: 'INSERT INTO games(`game_id`,`game_role`,`game_power`,`game_total`,`game_fav`,`user_id`) VALUES ?', // 新增多条数据
