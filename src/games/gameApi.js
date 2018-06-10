@@ -81,7 +81,9 @@ const sqlFun = {
         game_power: req.query.game_power,
         game_total: req.query.game_total,
         game_fav: req.query.game_fav,
-        user_id: req.query.user_id
+        user_id: req.query.user_id,
+        game_desc: req.query.game_desc,
+        game_user: req.query.game_user
       }];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
@@ -92,13 +94,14 @@ const sqlFun = {
   },
 
   // 修改一条英雄数据
-  updateGameRole() {
+  updateGameRole(req, res) {
     if (req.query) {
       let sqlInfo = sql.updateSql;
       let reqObj = req.query;
-      let ival = [reqObj.game_role, reqObj.game_power, reqObj.game_total, reqObj.game_fav, reqObj.game_id, reqObj.user_id];
+      let ival = [reqObj.game_role, reqObj.game_fav, reqObj.game_power, reqObj.game_total, reqObj.game_desc, reqObj.game_id, reqObj.user_id];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
+          statusCode.data = {};
           res.send(statusCode);
         }
       });
