@@ -19,7 +19,8 @@ router.post(interfaceApi.addGameRole, gameApi.addSingleGameRole);
 router.post(interfaceApi.updateGameRole, gameApi.updateGameRole);
 router.get(interfaceApi.deleteGameRole, gameApi.deleteGameRole);
 router.get(interfaceApi.totalCounts, gameApi.getTotalCounts);
-router.get(interfaceApi.getDataAndTotals, gameApi.getDataAndTotals)
+router.get(interfaceApi.getDataAndTotals, gameApi.getDataAndTotals);
+router.post(interfaceApi.searchGameRole, gameApi.getSearchRole);
 
 
 module.exports = router;

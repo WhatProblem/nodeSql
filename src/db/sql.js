@@ -8,4 +8,5 @@ module.exports = {
   deleteSql: 'DELETE FROM games WHERE game_id = ? AND user_id = ?', // 删除语句
   totalCounts: 'SELECT *, COUNT(*) FROM games WHERE game_fav = ? AND user_id = ?', // 获取符合条件的总数
   getDataAndTotals: 'SELECT SQL_CALC_FOUND_ROWS * FROM games WHERE user_id = ? AND game_fav = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取符合条件数据及总数
+  searchSql: 'SELECT * FROM games WHERE user_id = ? AND game_role LIKE ? ORDER BY create_date DESC', // 模糊查询，game_total，game_role
 }
