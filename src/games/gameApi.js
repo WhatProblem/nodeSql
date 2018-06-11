@@ -83,7 +83,7 @@ const sqlFun = {
         game_fav: req.query.game_fav,
         user_id: req.query.user_id,
         game_desc: req.query.game_desc,
-        game_user: req.query.game_user
+        user_name: req.query.user_name
       }];
       commonSql.poolConn(sqlInfo, ival, (result) => {
         if (result) {
