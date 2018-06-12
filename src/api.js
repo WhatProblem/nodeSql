@@ -7,12 +7,15 @@ const path = require('path');
 
 // games部分数据处理方法
 const gameApi = require('./games/gameApi.js');
+// films部分数据处理方法
+const filmApi = require('./films/filmApi.js');
 
 // api接口
 const interfaceApi = require('./db/interfaceApi.js');
 
 let router = express.Router();
 
+// 游戏模块
 router.get(interfaceApi.allGameRoleList, gameApi.getAllGameRoleData);
 router.get(interfaceApi.difFavDegree, gameApi.getDifFavDegData);
 router.post(interfaceApi.addGameRole, gameApi.addSingleGameRole);
@@ -21,6 +24,9 @@ router.get(interfaceApi.deleteGameRole, gameApi.deleteGameRole);
 router.get(interfaceApi.totalCounts, gameApi.getTotalCounts);
 router.get(interfaceApi.getDataAndTotals, gameApi.getDataAndTotals);
 router.post(interfaceApi.searchGameRole, gameApi.getSearchRole);
+
+// 视频模块
+router.post(interfaceApi.addFilm, filmApi.addFilm);
 
 
 module.exports = router;
