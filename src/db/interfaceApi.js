@@ -13,4 +13,5 @@ module.exports = {
 
   // 视频模块
   addFilm: '/film/addFilm', // 新增一部影片，post
+  selectTypeFilm: '/film/selectTypeFilm', // 根据影片类型查询
 }
