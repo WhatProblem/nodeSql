@@ -15,5 +15,7 @@ module.exports = {
   insertFilmSql: 'INSERT INTO films SET ?', // 新增视频
   insertMoreFilmSql: 'INSERT INTO films(`film_name`,`film_director`,`film_area`,`film_time`,`film_type`,`film_score`,`film_major`,`film_desc`,`user_name`, `user_id`) VALUES ?', // 新增多条数据
   selectTypeSql: 'SELECT * FROM films WHERE film_type = ? ORDER BY create_date DESC LIMIT ?, ?', // 根据影片类型查询, get
-  allTypeSql: 'SELECT *, COUNT(*) FROM games WHERE ?? = ?', // 获取符合条件的总数
+  allTypeSql: 'SELECT *, COUNT(*) FROM films WHERE ?? = ?', // 获取符合条件的总数
+  updateFilmSql: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // 编辑修改视频数据
+  deleteFilmSql: 'DELETE FROM films WHERE film_id = ? AND user_id = ?', // 删除语句
 }
