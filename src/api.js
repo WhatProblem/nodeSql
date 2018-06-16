@@ -26,7 +26,7 @@ router.get(interfaceApi.getDataAndTotals, gameApi.getDataAndTotals);
 router.post(interfaceApi.searchGameRole, gameApi.getSearchRole);
 
 // 视频模块
-router.post(interfaceApi.addFilm, filmApi.addFilm);
+router.post(interfaceApi.addOrEditFilm, filmApi.addOrEditFilm);
 router.get(interfaceApi.selectTypeFilm, filmApi.selectTypeFilm);
 
 
