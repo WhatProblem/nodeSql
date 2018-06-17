@@ -12,6 +12,7 @@ module.exports = {
   searchGameRole: '/game/searchGameRole', // 模糊查询，post
 
   // 视频模块
-  addOrEditFilm: '/film/addOrEditFilm', // 新增一部影片，post
+  addOrEditOrDeleteFilm: '/film/addOrEditOrDeleteFilm', // 新增，编辑，删除一部影片，post
   selectTypeFilm: '/film/selectTypeFilm', // 根据影片类型查询
+  searchFilm: '/film/searchFilm', // 模糊查询
 }

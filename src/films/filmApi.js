@@ -16,7 +16,7 @@ const filmFun = {
    * @function 新增一条数据,一定不传film_id
    * @function 修改一条数据,必传film_id,user_id
    */
-  addOrEditFilm(req, res) {
+  addOrEditOrDeleteFilm(req, res) {
     if (req.query) {
       let sqlInfo = null;
       let ival = null;
@@ -117,6 +117,87 @@ const filmFun = {
         }
       });
     }
+  },
+
+  /**
+   * @description: 模糊查询总数
+   * @param {film_name} 影片名称
+   * @param {film_desc} 影片描述
+   * @param {film_area} 影片区域
+   * @param {film_time} 影片年代
+   * @function {film_value} 关键词
+   * @function {film_type} 影片类型：前提查询条件
+   */
+  allSearchFilm(req) {
+    let sqlInfo = null;
+    let likeValue = null;
+    let ival = null;
+    if (req.query && req.query.film_type === '9') {
+      sqlInfo = sql.allSearchFilmSql;
+      likeValue = '%' + req.query.film_value + '%';
+      ival = [likeValue, likeValue, likeValue, likeValue,];
+    } else {
+      sqlInfo = sql.allSearchFilmTypeSql;
+      likeValue = '%' + req.query.film_value + '%';
+      ival = [req.query.film_type, likeValue, likeValue, likeValue, likeValue,];
+    }
+    return new Promise((resolve, reject) => {
+      commonSql.poolConn(sqlInfo, ival, (result) => {
+        if (result) {
+          resolve(result[0]['COUNT(*)']);
+        }
+      });
+    });
+  },
+
+  /**
+   * @description: 模糊查询影片名称，描述，区域，年代
+   * @param {film_name} 影片名称
+   * @param {film_desc} 影片描述
+   * @param {film_area} 影片区域
+   * @param {film_time} 影片年代
+   * @function {film_value} 关键词
+   */
+  searchFilm(req, res) {
+    let reqObj = null;
+    let sqlInfo = null;
+    let filmName = null;
+    let filmDesc = null;
+    let filmArea = null;
+    let filmTime = null;
+    let limitTotals = null;
+    let limitStart = null;
+    if (req.query && req.query.film_type === '9') {
+      reqObj = req.query;
+      sqlInfo = sql.searchFilmSql;
+      filmName = '%' + reqObj.film_value + '%';
+      filmDesc = '%' + reqObj.film_value + '%';
+      filmArea = '%' + reqObj.film_value + '%';
+      filmTime = '%' + reqObj.film_value + '%';
+      limitTotals = parseInt(reqObj.pages_total); // 每页展示数量
+      limitStart = parseInt((reqObj.pages_index - 1) * limitTotals); // 查询开始位置
+      ival = [filmName, filmDesc, filmArea, filmTime, limitStart, limitTotals];
+    } else {
+      reqObj = req.query;
+      sqlInfo = sql.searchFilmTypeSql;
+      filmName = '%' + reqObj.film_value + '%';
+      filmDesc = '%' + reqObj.film_value + '%';
+      filmArea = '%' + reqObj.film_value + '%';
+      filmTime = '%' + reqObj.film_value + '%';
+      limitTotals = parseInt(reqObj.pages_total); // 每页展示数量
+      limitStart = parseInt((reqObj.pages_index - 1) * limitTotals); // 查询开始位置
+      ival = [reqObj.film_type, filmName, filmDesc, filmArea, filmTime, limitStart, limitTotals];
+    }
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        filmFun.allSearchFilm(req).then((respTotals) => {
+          statusCode.data = {};
+          statusCode.data.totals = respTotals;
+          statusCode.data.data = result;
+          res.send(statusCode);
+        });
+      }
+    })
   }
 };
 
