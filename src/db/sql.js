@@ -18,4 +18,8 @@ module.exports = {
   allTypeSql: 'SELECT *, COUNT(*) FROM films WHERE ?? = ?', // 获取符合条件的总数
   updateFilmSql: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // 编辑修改视频数据
   deleteFilmSql: 'DELETE FROM films WHERE film_id = ? AND user_id = ?', // 删除语句
+  searchFilmSql: 'SELECT * FROM films WHERE film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ? ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
+  allSearchFilmSql: 'SELECT *, COUNT(*) FROM films WHERE film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?', // 模糊查询总数
+  searchFilmTypeSql: 'SELECT * FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?) ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
+  allSearchFilmTypeSql: 'SELECT *, COUNT(*) FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?)', // 模糊查询总数
 }
