@@ -20,4 +20,7 @@ module.exports = {
   addOrEditOrDelMusic: '/music/addOrEditOrDelMusic', // 新增，编辑，删除音乐，post
   selectTypeMusic: '/music/selectTypeMusic', // 根据影片类型查询
   searchMusic: '/music/searchMusic', // 模糊查询,get
+
+  // 图片上传
+  uploadImg: '/test/uploadImg', // 图片上传，post
 }

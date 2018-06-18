@@ -3,7 +3,9 @@ const app = express();
 // const router = app.router();
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 // const bodyParser = require('body-parser');
+let router = express.Router();
 
 // games部分数据处理方法
 const gameApi = require('./games/gameApi.js');
@@ -11,11 +13,18 @@ const gameApi = require('./games/gameApi.js');
 const filmApi = require('./films/filmApi.js');
 // musics部分数据处理方法
 const musicApi = require('./musics/musicApi.js');
-
 // api接口
 const interfaceApi = require('./db/interfaceApi.js');
+// uploadApi接口
+const uploadApi = require('./utils/uploadApi.js');
 
-let router = express.Router();
+
+const upload = multer(
+  {
+    dest: './public/test'  // 定义图片上传的临时目录
+  }
+);
+
 
 // 游戏模块
 router.get(interfaceApi.allGameRoleList, gameApi.getAllGameRoleData);
@@ -36,6 +45,9 @@ router.get(interfaceApi.searchFilm, filmApi.searchFilm);
 router.post(interfaceApi.addOrEditOrDelMusic, musicApi.addOrEditOrDelMusic);
 router.get(interfaceApi.selectTypeMusic, musicApi.selectTypeMusic);
 router.get(interfaceApi.searchMusic, musicApi.searchMusic);
+
+// 文件模块：图片
+router.post(interfaceApi.uploadImg, upload.single('imageFile'), uploadApi.uploadImg)
 
 
 module.exports = router;
