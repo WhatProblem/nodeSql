@@ -9,6 +9,8 @@ const path = require('path');
 const gameApi = require('./games/gameApi.js');
 // films部分数据处理方法
 const filmApi = require('./films/filmApi.js');
+// musics部分数据处理方法
+const musicApi = require('./musics/musicApi.js');
 
 // api接口
 const interfaceApi = require('./db/interfaceApi.js');
@@ -29,6 +31,11 @@ router.post(interfaceApi.searchGameRole, gameApi.getSearchRole);
 router.post(interfaceApi.addOrEditOrDeleteFilm, filmApi.addOrEditOrDeleteFilm);
 router.get(interfaceApi.selectTypeFilm, filmApi.selectTypeFilm);
 router.get(interfaceApi.searchFilm, filmApi.searchFilm);
+
+// 音乐模块
+router.post(interfaceApi.addOrEditOrDelMusic, musicApi.addOrEditOrDelMusic);
+router.get(interfaceApi.selectTypeMusic, musicApi.selectTypeMusic);
+router.get(interfaceApi.searchMusic, musicApi.searchMusic);
 
 
 module.exports = router;
