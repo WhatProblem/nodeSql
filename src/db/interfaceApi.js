@@ -13,6 +13,11 @@ module.exports = {
 
   // 视频模块
   addOrEditOrDeleteFilm: '/film/addOrEditOrDeleteFilm', // 新增，编辑，删除一部影片，post
-  selectTypeFilm: '/film/selectTypeFilm', // 根据影片类型查询
-  searchFilm: '/film/searchFilm', // 模糊查询
+  selectTypeFilm: '/film/selectTypeFilm', // 根据影片类型查询,get
+  searchFilm: '/film/searchFilm', // 模糊查询,get
+
+  // 音乐模块
+  addOrEditOrDelMusic: '/music/addOrEditOrDelMusic', // 新增，编辑，删除音乐，post
+  selectTypeMusic: '/music/selectTypeMusic', // 根据影片类型查询
+  searchMusic: '/music/searchMusic', // 模糊查询,get
 }

@@ -22,4 +22,15 @@ module.exports = {
   allSearchFilmSql: 'SELECT *, COUNT(*) FROM films WHERE film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?', // 模糊查询总数
   searchFilmTypeSql: 'SELECT * FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?) ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
   allSearchFilmTypeSql: 'SELECT *, COUNT(*) FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?)', // 模糊查询总数
+
+  // 音乐模块
+  insertMusicSql: 'INSERT INTO musics SET ?', // 新增音乐
+  selectMusicTypeSql: 'SELECT * FROM musics WHERE music_type = ? ORDER BY create_date DESC LIMIT ?, ?', // 根据音乐类型查询, get
+  allMusicTypeSql: 'SELECT *, COUNT(*) FROM musics WHERE ?? = ?', // 获取符合条件的总数
+  updateMusicSql: 'UPDATE musics SET ? WHERE music_id = ? AND user_id = ?', // 编辑修改视频数据
+  deleteMusicSql: 'DELETE FROM musics WHERE music_id = ? AND user_id = ?', // 删除语句
+  searchMusicSql: 'SELECT * FROM musics WHERE music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ? ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
+  allSearchMusicSql: 'SELECT *, COUNT(*) FROM musics WHERE music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?', // 模糊查询总数
+  searchMusicTypeSql: 'SELECT * FROM musics WHERE music_type = ? AND (music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?) ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
+  allSearchMusicTypeSql: 'SELECT *, COUNT(*) FROM musics WHERE music_type = ? AND (music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?)', // 模糊查询总数
 }
