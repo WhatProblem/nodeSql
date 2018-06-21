@@ -16,7 +16,7 @@ const musicApi = require('./musics/musicApi.js');
 // api接口
 const interfaceApi = require('./db/interfaceApi.js');
 // uploadApi接口
-const uploadApi = require('./utils/uploadApi.js');
+const uploadApi = require('./upload/uploadApi.js');
 
 
 const upload = multer(
@@ -46,8 +46,10 @@ router.post(interfaceApi.addOrEditOrDelMusic, musicApi.addOrEditOrDelMusic);
 router.get(interfaceApi.selectTypeMusic, musicApi.selectTypeMusic);
 router.get(interfaceApi.searchMusic, musicApi.searchMusic);
 
-// 文件模块：图片
-router.post(interfaceApi.uploadImg, upload.single('imageFile'), uploadApi.uploadImg)
+// 文件模块：上传图片
+router.post(interfaceApi.uploadImg, upload.single('imageFile'), uploadApi.uploadImg);
 
+// 文件模块：加载图片
+router.get(interfaceApi.loadImg, uploadApi.loadImg)
 
 module.exports = router;

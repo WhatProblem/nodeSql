@@ -22,5 +22,6 @@ module.exports = {
   searchMusic: '/music/searchMusic', // 模糊查询,get
 
   // 图片上传
-  uploadImg: '/test/uploadImg', // 图片上传，post
+  uploadImg: '/film/uploadImg', // 图片上传，post
+  loadImg: '/film/loadImg', // 加载图片，get
 }
