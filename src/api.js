@@ -47,9 +47,9 @@ router.get(interfaceApi.selectTypeMusic, musicApi.selectTypeMusic);
 router.get(interfaceApi.searchMusic, musicApi.searchMusic);
 
 // 文件模块：上传图片
-router.post(interfaceApi.uploadImg, upload.single('imageFile'), uploadApi.uploadImg);
+router.post(interfaceApi.uploadFilmImg, upload.single('imageFile'), uploadApi.uploadFilmImg);
 
-// 文件模块：加载图片
-router.get(interfaceApi.loadImg, uploadApi.loadImg)
+// 文件模块：加载视频图片
+router.get(interfaceApi.loadFilmImg, uploadApi.loadFilmImg)
 
 module.exports = router;
