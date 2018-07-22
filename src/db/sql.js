@@ -1,5 +1,5 @@
 module.exports = {
-  // 游戏模块
+  // 游戏模块--系统后台
   selectSql: 'SELECT * FROM games WHERE user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 查询所有数据
   AllCounts: 'SELECT *, COUNT(*) FROM games WHERE user_id = ?', // 获取符合条件的总数
   selectFavDegree: 'SELECT * FROM games WHERE user_id = ? AND game_fav = ?', // 查询不同喜欢等级的数据
@@ -11,7 +11,7 @@ module.exports = {
   getDataAndTotals: 'SELECT SQL_CALC_FOUND_ROWS * FROM games WHERE user_id = ? AND game_fav = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取符合条件数据及总数
   searchSql: 'SELECT * FROM games WHERE user_id = ? AND game_role LIKE ? ORDER BY create_date DESC', // 模糊查询，game_total，game_role
 
-  // 视频模块
+  // 视频模块--系统后台
   insertFilmSql: 'INSERT INTO films SET ?', // 新增视频
   insertMoreFilmSql: 'INSERT INTO films(`film_name`,`film_director`,`film_area`,`film_time`,`film_type`,`film_score`,`film_major`,`film_desc`,`user_name`, `user_id`) VALUES ?', // 新增多条数据
   selectTypeSql: 'SELECT * FROM films WHERE film_type = ? ORDER BY create_date DESC LIMIT ?, ?', // 根据影片类型查询, get
@@ -23,7 +23,7 @@ module.exports = {
   searchFilmTypeSql: 'SELECT * FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?) ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
   allSearchFilmTypeSql: 'SELECT *, COUNT(*) FROM films WHERE film_type = ? AND (film_name LIKE ? OR film_desc LIKE ? OR film_area LIKE ? OR film_time LIKE ?)', // 模糊查询总数
 
-  // 音乐模块
+  // 音乐模块--系统后台
   insertMusicSql: 'INSERT INTO musics SET ?', // 新增音乐
   selectMusicTypeSql: 'SELECT * FROM musics WHERE music_type = ? ORDER BY create_date DESC LIMIT ?, ?', // 根据音乐类型查询, get
   allMusicTypeSql: 'SELECT *, COUNT(*) FROM musics WHERE ?? = ?', // 获取符合条件的总数
@@ -33,4 +33,7 @@ module.exports = {
   allSearchMusicSql: 'SELECT *, COUNT(*) FROM musics WHERE music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?', // 模糊查询总数
   searchMusicTypeSql: 'SELECT * FROM musics WHERE music_type = ? AND (music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?) ORDER BY create_date DESC LIMIT ?, ?', // 模糊查询
   allSearchMusicTypeSql: 'SELECT *, COUNT(*) FROM musics WHERE music_type = ? AND (music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?)', // 模糊查询总数
+
+  // home视频模块--ng2-lifeStyle
+  getScoreVideo: 'SELECT * FROM films WHERE film_score >= ? ORDER BY create_date DESC', // 获取首页popFilm部分
 }

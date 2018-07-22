@@ -67,6 +67,22 @@ const uploadFun = {
       //   res.send(resp);
       // });
     }
+  },
+
+  /**
+   * @description: home部分homePopFilm部分图片
+   * @param {film_id} 图片id
+   * @param {poster} 图片类型
+   */
+  loadHomePopFilmPic(req, res, next) {
+    let imgNum = req.query.filmId;
+    if (req.query.poster === 'detail') {
+      let posterUrl = `./public/films/homePopFilm/${imgNum}.jpg`;
+      uploadFun.comLoadImg(posterUrl, (sendFile) => {
+        res.send(sendFile);
+      });
+    }
+
   }
 }
 
