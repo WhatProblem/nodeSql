@@ -25,7 +25,7 @@ const upload = multer(
   }
 );
 
-
+/*************************系统后台******************************/
 // 游戏模块
 router.get(interfaceApi.allGameRoleList, gameApi.getAllGameRoleData);
 router.get(interfaceApi.difFavDegree, gameApi.getDifFavDegData);
@@ -50,6 +50,14 @@ router.get(interfaceApi.searchMusic, musicApi.searchMusic);
 router.post(interfaceApi.uploadFilmImg, upload.single('imageFile'), uploadApi.uploadFilmImg);
 
 // 文件模块：加载视频图片
-router.get(interfaceApi.loadFilmImg, uploadApi.loadFilmImg)
+// router.get(interfaceApi.loadFilmImg, uploadApi.loadFilmImg);
 
+
+
+
+/**************************ng2-lifeStyle部分******************************/
+
+// home部分
+router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);
+router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic);
 module.exports = router;

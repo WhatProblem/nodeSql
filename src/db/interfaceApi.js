@@ -1,6 +1,7 @@
 // 接口编写定义
 
 module.exports = {
+  /*********************系统后台*********************/
   // 游戏模块
   allGameRoleList: '/game/allGameRoleList', // 所有游戏人物列表,get
   difFavDegree: '/game/difFavDegree', // 查询同一账户不同喜欢程度的游戏人物数据,get
@@ -24,4 +25,10 @@ module.exports = {
   // 图片上传
   uploadFilmImg: '/film/uploadImg', // 图片视频上传，post
   loadFilmImg: '/film/loadImg', // 加载视频图片，get
+
+
+
+  /*********************ng2-lifeStyle部分********************/
+  homePopFilm: '/home/homePopFilm', // 图片获取，get
+  popFilmPoster: '/film/loadImg'
 }

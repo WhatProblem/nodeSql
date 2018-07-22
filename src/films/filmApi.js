@@ -10,6 +10,8 @@ let statusCode = {
   msg: 'successfully!'
 };
 
+const baseIp = 'http://localhost:9000';
+
 const filmFun = {
   /**
    * @description: 新增，编辑视频资料
@@ -198,6 +200,40 @@ const filmFun = {
         });
       }
     })
+  },
+
+
+  /***********************ng2-lifeStyle部分数据*************************/
+  /**
+   * @description: 获取home部分popFilm部分
+   * @param {film_score} 根据影片评分查询
+   */
+  getScoreFilm(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    if (req && req.query) {
+      reqObj = req.query.film_score;
+      ival = [reqObj];
+      sqlInfo = sql.getScoreVideo;
+    }
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        statusCode.data = {};
+        statusCode.data.totals = result.length;
+        result = filmFun.dealPicPath(result);
+        statusCode.data.data = result;
+        res.send(statusCode);
+      }
+    });
+  },
+
+  // 处理图片路径方法
+  dealPicPath(val) {
+    val.forEach((item, index) => {
+      item.film_detail_poster = baseIp + item.film_detail_poster;
+    });
+    return val;
   }
 };
 
