@@ -30,5 +30,7 @@ module.exports = {
 
   /*********************ng2-lifeStyle部分********************/
   homePopFilm: '/home/homePopFilm', // 图片获取，get
-  popFilmPoster: '/film/loadImg'
+  popFilmPoster: '/film/loadImg', // 图片获取，get
+  homePopMusic: '/home/homePopMusic',
+  popMusicPoster: '/music/loadImg',
 }

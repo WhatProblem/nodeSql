@@ -82,7 +82,16 @@ const uploadFun = {
         res.send(sendFile);
       });
     }
+  },
 
+  loadHomePopMusicPic(req, res, next) {
+    let imgNum = req.query.musicId;
+    if (req.query.poster === 'detail') {
+      let posterUrl = `./public/musics/homePopMusic/${imgNum}.jpg`;
+      uploadFun.comLoadImg(posterUrl, (sendFile) => {
+        res.send(sendFile);
+      })
+    }
   }
 }
 
