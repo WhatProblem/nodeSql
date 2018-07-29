@@ -37,4 +37,5 @@ module.exports = {
   // home视频模块--ng2-lifeStyle
   getScoreVideo: 'SELECT * FROM films WHERE film_score >= ? ORDER BY create_date DESC', // 获取首页popFilm部分
   getScoreAudio: 'SELECT * FROM musics WHERE music_score >= ? ORDER BY create_date DESC', // 获取首页popMusic部分
+  getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
 }

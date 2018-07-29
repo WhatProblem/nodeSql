@@ -33,4 +33,6 @@ module.exports = {
   popFilmPoster: '/film/loadImg', // 图片获取，get
   homePopMusic: '/home/homePopMusic',
   popMusicPoster: '/music/loadImg',
+  homePopGame: '/home/homePopGame',
+  popGamePoster: '/game/loadImg',
 }

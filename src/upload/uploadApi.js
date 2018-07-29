@@ -90,6 +90,16 @@ const uploadFun = {
       let posterUrl = `./public/musics/homePopMusic/${imgNum}.jpg`;
       uploadFun.comLoadImg(posterUrl, (sendFile) => {
         res.send(sendFile);
+      });
+    }
+  },
+
+  loadHomePopGamePic(req, res, next) {
+    let imgNum = req.query.gameId;
+    if (req.query.poster === 'detail') {
+      let posterUrl = `./public/games/homePopGame/${imgNum}.jpg` || `./public/games/homePopGame/${imgNum}.png`;
+      uploadFun.comLoadImg(posterUrl, (sendFile) => {
+        res.send(sendFile);
       })
     }
   }

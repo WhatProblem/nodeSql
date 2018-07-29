@@ -61,5 +61,7 @@ router.post(interfaceApi.uploadFilmImg, upload.single('imageFile'), uploadApi.up
 router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);
 router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic);
 router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic);
-router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic)
+router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic);
+router.get(interfaceApi.homePopGame, gameApi.getPowerGame);
+router.get(interfaceApi.popGamePoster, uploadApi.loadHomePopGamePic)
 module.exports = router;

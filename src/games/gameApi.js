@@ -15,6 +15,8 @@ let statusCode = {
   msg: 'successfully!'
 };
 
+const baseIp = 'http://localhost:9000';
+
 const sqlFun = {
   // 所有数据
   getAllCounts(req) {
@@ -187,6 +189,40 @@ const sqlFun = {
         });
       });
     }
+  },
+
+  /***********************ng2-lifeStyle部分数据*************************/
+  /**
+   * @description: 获取home部分popGame部分
+   * @param {game_power} 根据影片评分查询
+   */
+  getPowerGame(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    if (req && req.query) {
+      reqObj = req.query.game_power;
+      ival = [reqObj];
+      sqlInfo = sql.getGameDetail;
+    }
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        statusCode.data = {};
+        statusCode.data.totals = result.length;
+        result = sqlFun.dealPicPath(result);
+        statusCode.data.data = result;
+        res.send(statusCode);
+      }
+    });
+  },
+
+  // 处理图片路径方法
+  dealPicPath(val) {
+    val.forEach((item, index) => {
+      item.game_detail_poster = baseIp + item.game_detail_poster;
+      item.game_avatar_poster = baseIp + item.game_avatar_poster;
+    });
+    return val;
   }
 }
 
