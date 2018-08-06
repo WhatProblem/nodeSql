@@ -4,9 +4,11 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
-// const bodyParser = require('body-parser');
+
 let router = express.Router();
 
+// 登录部分
+const userInfo = require('./user/user.js');
 // games部分数据处理方法
 const gameApi = require('./games/gameApi.js');
 // films部分数据处理方法
@@ -56,6 +58,7 @@ router.post(interfaceApi.uploadFilmImg, upload.single('imageFile'), uploadApi.up
 
 
 /**************************ng2-lifeStyle部分******************************/
+router.post(interfaceApi.loginLifeStyle, userInfo.loginLifeStyle)
 
 // home部分
 router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);

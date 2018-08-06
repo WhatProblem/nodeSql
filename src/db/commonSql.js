@@ -41,7 +41,7 @@ module.exports = {
           return;
         } else {
           // console.log(results);
-          console.log('get data successfully!');
+          // console.log('get data successfully!');
           callback(results);
         }
         conn.release();

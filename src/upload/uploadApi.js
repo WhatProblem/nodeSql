@@ -27,7 +27,7 @@ const uploadFun = {
       if (err) {
         console.log(err);
       } else {
-        console.log('文件内容读取成功!');
+        // console.log('文件内容读取成功!');
         callback(data);
       }
     });
