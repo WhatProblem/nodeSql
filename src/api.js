@@ -58,7 +58,8 @@ router.post(interfaceApi.uploadFilmImg, upload.single('imageFile'), uploadApi.up
 
 
 /**************************ng2-lifeStyle部分******************************/
-router.post(interfaceApi.loginLifeStyle, userInfo.loginLifeStyle)
+router.post(interfaceApi.loginLifeStyle, userInfo.loginLifeStyle);
+router.post(interfaceApi.logOutLifeStyle, userInfo.logOutLifeStyle)
 
 // home部分
 router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);

@@ -13,9 +13,18 @@ const secret = 'wodexifudongsijia';
 
 // 签发token
 function createToken(payload, secret) {
-  let token = jwt.sign(payload, secret, { expiresIn: 3600 * 24 });
-  console.log(token);
+  let token = jwt.sign(payload, secret, { expiresIn: '1day' });
   return token;
+}
+
+// 验证token
+function isValidateToken(token) {
+  return jwt.verify(token, secret, (error, decode) => {
+    if (error) {
+      return;
+    }
+    return decode;
+  })
 }
 
 const userInfo = {
@@ -24,8 +33,22 @@ const userInfo = {
   */
   loginLifeStyle(req, res) {
     let resToken = createToken(payload, secret);
-    
-    res.send('resToken');
+    let resObj = { token: resToken }
+    res.send(resObj);
+  },
+
+
+  /**
+  * @description: 退出登录接口
+  */
+  logOutLifeStyle(req, res) {
+    let headerToken = req.headers.authorization;
+    let resObj = { msg: 'logOut successfully!' }
+    console.log(headerToken);
+    let logResult = isValidateToken(headerToken);
+    if (logResult['name'] === 'dongsijia' && logResult['admin']) {
+      res.send(resObj);
+    }
   }
 }
 
