@@ -32,8 +32,10 @@ module.exports = {
   loginLifeStyle: '/ng2LifeStyle/login', // 登录
   logOutLifeStyle: '/ng2LifeStyle/logOut', // 退出登录
   homePopFilm: '/home/homePopFilm', // 图片获取，get
+
   popFilmPoster: '/film/loadImg', // 图片获取，get
   homePopMusic: '/home/homePopMusic',
+  popFilmLock: '/home/popFilmLock', // 加锁控制，post
   popMusicPoster: '/music/loadImg',
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',

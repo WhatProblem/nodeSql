@@ -228,6 +228,22 @@ const filmFun = {
     });
   },
 
+  /**
+   * @description: home部分的popFilm加锁控制
+   * @param {film_id} 影片id
+   * @param {film_lock} 0:未加锁
+   * @param {user_id} 用户id
+   */
+
+  changeFilmLock(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    if (req&&req.param) {
+
+    }
+  },
+
   // 处理图片路径方法
   dealPicPath(val) {
     val.forEach((item, index) => {

@@ -64,6 +64,7 @@ router.post(interfaceApi.logOutLifeStyle, userInfo.logOutLifeStyle)
 // home部分
 router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);
 router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic);
+router.post(interfaceApi.popFilmLock, filmApi.changeFilmLock);
 router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic);
 router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic);
 router.get(interfaceApi.homePopGame, gameApi.getPowerGame);
