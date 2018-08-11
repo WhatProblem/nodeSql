@@ -39,4 +39,5 @@ module.exports = {
   getScoreAudio: 'SELECT * FROM musics WHERE music_score >= ? ORDER BY create_date DESC', // 获取首页popMusic部分
   getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
   changeLockOrFav: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // popFilm部分的收藏加锁
+  changMusicFav: 'UPDATE musics SET ? WHERE music_id = ? AND user_id = ?', // popMusic部分收藏
 }

@@ -228,6 +228,29 @@ const musicFun = {
     });
   },
 
+  /**
+   * @description: popMusic部分收藏
+   * @param {music_id} 
+   * @param {user_id}
+   * @param {music_favorite}
+   */
+  musicFav(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    if (req && req.body.music_favorite) {
+      reqObj = { music_favorite: req.body.music_favorite };
+      ival = [reqObj, req.body.music_id, req.body.user_id];
+      sqlInfo = sql.changMusicFav
+    }
+    commonSql.poolConn(sqlInfo, ival, result => {
+      if (result) {
+        statusCode.data = {};
+        res.send(statusCode);
+      }
+    })
+  },
+
   // 处理图片路径方法
   dealPicPath(val) {
     val.forEach((item, index) => {

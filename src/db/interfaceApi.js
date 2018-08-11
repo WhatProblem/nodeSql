@@ -35,8 +35,9 @@ module.exports = {
 
   popFilmPoster: '/film/loadImg', // 图片获取，get
   homePopMusic: '/home/homePopMusic',
-  popFilmLockOrFav: '/home/popFilmLockOrFav', // 加锁控制，post
+  popFilmLockOrFav: '/home/popFilmLockOrFav', // 加锁/收藏控制，post
   popMusicPoster: '/music/loadImg',
+  popMusicFav: '/home/popMusicFav', // 音乐收藏，post
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',
 }

@@ -66,6 +66,7 @@ router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);
 router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic);
 router.post(interfaceApi.popFilmLockOrFav, filmApi.filmLockOrFav);
 router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic);
+router.post(interfaceApi.popMusicFav, musicApi.musicFav);
 router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic);
 router.get(interfaceApi.homePopGame, gameApi.getPowerGame);
 router.get(interfaceApi.popGamePoster, uploadApi.loadHomePopGamePic)
