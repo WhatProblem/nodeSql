@@ -232,16 +232,27 @@ const filmFun = {
    * @description: home部分的popFilm加锁控制
    * @param {film_id} 影片id
    * @param {film_lock} 0:未加锁
+   * @param {film_favorite} 1: 收藏
    * @param {user_id} 用户id
    */
 
-  changeFilmLock(req, res) {
+  filmLockOrFav(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req&&req.param) {
-
+    if (req && req.body.film_lock) {
+      reqObj = { film_lock: req.body.film_lock };
+    } else if (req.body.film_favorite) {
+      reqObj = { film_favorite: req.body.film_favorite };
     }
+    ival = [reqObj, req.body.film_id, req.body.user_id];
+    sqlInfo = sql.changeLockOrFav;
+    commonSql.poolConn(sqlInfo, ival, (result)=>{
+      if (result) {
+        statusCode.data = {};
+        res.send(statusCode);
+      }
+    })
   },
 
   // 处理图片路径方法

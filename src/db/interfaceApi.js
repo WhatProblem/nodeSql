@@ -35,7 +35,7 @@ module.exports = {
 
   popFilmPoster: '/film/loadImg', // 图片获取，get
   homePopMusic: '/home/homePopMusic',
-  popFilmLock: '/home/popFilmLock', // 加锁控制，post
+  popFilmLockOrFav: '/home/popFilmLockOrFav', // 加锁控制，post
   popMusicPoster: '/music/loadImg',
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',
