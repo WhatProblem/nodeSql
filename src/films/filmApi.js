@@ -247,7 +247,7 @@ const filmFun = {
     }
     ival = [reqObj, req.body.film_id, req.body.user_id];
     sqlInfo = sql.changeLockOrFav;
-    commonSql.poolConn(sqlInfo, ival, (result)=>{
+    commonSql.poolConn(sqlInfo, ival, (result) => {
       if (result) {
         statusCode.data = {};
         res.send(statusCode);
@@ -258,9 +258,60 @@ const filmFun = {
   // 处理图片路径方法
   dealPicPath(val) {
     val.forEach((item, index) => {
-      item.film_detail_poster = baseIp + item.film_detail_poster;
+      if (item.film_detail_poster) {
+        item.film_detail_poster = baseIp + item.film_detail_poster;
+      } else if (item.music_detail_poster) {
+        item.music_detail_poster = baseIp + item.music_detail_poster;
+      } else if (item.game_detail_poster) {
+        item.game_detail_poster = baseIp + item.game_detail_poster;
+      }
     });
     return val;
+  },
+
+  /**
+* @description: 获取homeDetailFilter部分
+* @param {film_score} 影片评分
+* @param {film_time} 影片年代
+* @param {film_type} 影片类型
+* @param {user_id} 用户id
+*/
+  getHomeDetailFilter(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    let score = '';
+    let time = '';
+    let type = '';
+    let difficult = '';
+    if (req.query.film_score || req.query.film_score === '0') {
+      score = req.query.film_score === '0' ? '' : (req.query.film_score + '.');
+      time = req.query.film_time === '0' ? '' : req.query.film_time;
+      type = req.query.film_type === '0' ? '' : req.query.film_type;
+      ival = ['%' + score + '%', '%' + time + '%', '%' + type + '%', req.query.user_id, parseInt(req.query.pages_index), parseInt(req.query.pages_total)];
+      sqlInfo = sql.homeDetailFilm;
+    } else if (req.query.music_score || req.query.music_score === '0') {
+      score = req.query.music_score === '0' ? '' : (req.query.music_score + '.');
+      time = req.query.music_time === '0' ? '' : req.query.music_time;
+      type = req.query.music_type === '0' ? '' : req.query.music_type;
+      ival = ['%' + score + '%', '%' + time + '%', '%' + type + '%', req.query.user_id, parseInt(req.query.pages_index), parseInt(req.query.pages_total)];
+      sqlInfo = sql.homeDetailMusic;
+    } else if (req.query.game_hero_score || req.query.game_hero_score === '0') {
+      score = req.query.game_hero_score === '0' ? '' : req.query.game_hero_score;
+      difficult = req.query.game_hero_degree === '0' ? '' : req.query.game_hero_degree;
+      type = req.query.game_hero_type === '0' ? '' : req.query.game_hero_type;
+      ival = ['%' + score + '%', '%' + difficult + '%', '%' + type + '%', req.query.user_id, parseInt(req.query.pages_index), parseInt(req.query.pages_total)];
+      sqlInfo = sql.homeDetailGame;
+    }
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        statusCode.data = {};
+        statusCode.data.totals = result.length;
+        result = filmFun.dealPicPath(result);
+        statusCode.data.data = result;
+        res.send(statusCode);
+      }
+    });
   }
 };
 

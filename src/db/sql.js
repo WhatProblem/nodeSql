@@ -40,4 +40,7 @@ module.exports = {
   getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
   changeLockOrFav: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // popFilm部分的收藏加锁
   changMusicFav: 'UPDATE musics SET ? WHERE music_id = ? AND user_id = ?', // popMusic部分收藏
+  homeDetailFilm: 'SELECT * FROM films WHERE film_score LIKE ? AND film_time LIKE ? AND film_type LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailFilm部分
+  homeDetailMusic: 'SELECT * FROM musics WHERE music_score LIKE ? AND music_time LIKE ? AND music_type LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailMusic部分
+  homeDetailGame: 'SELECT * FROM games WHERE game_hero_score LIKE ? AND game_hero_type LIKE ? AND game_hero_degree LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailGame部分
 }

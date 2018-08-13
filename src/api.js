@@ -69,5 +69,8 @@ router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic);
 router.post(interfaceApi.popMusicFav, musicApi.musicFav);
 router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic);
 router.get(interfaceApi.homePopGame, gameApi.getPowerGame);
-router.get(interfaceApi.popGamePoster, uploadApi.loadHomePopGamePic)
+router.get(interfaceApi.popGamePoster, uploadApi.loadHomePopGamePic);
+
+// homeDetail
+router.get(interfaceApi.homeDetailFilter, filmApi.getHomeDetailFilter);
 module.exports = router;

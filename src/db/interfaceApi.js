@@ -40,4 +40,5 @@ module.exports = {
   popMusicFav: '/home/popMusicFav', // 音乐收藏，post
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',
+  homeDetailFilter: '/home/homeDetailFilter', // homeDetailFilm部分
 }
