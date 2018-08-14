@@ -312,6 +312,26 @@ const filmFun = {
         res.send(statusCode);
       }
     });
+  },
+
+  /**
+* @description: 获取影片详情
+* @param {user_id}
+* @param {film_id}
+*/
+  getFilmDetail(req, res) {
+    let ival = null;
+    let sqlInfo = null;
+    if (req && req.query.film_id) {
+      ival = [req.query.film_id, req.query.user_id];
+      sqlInfo = sql.getFilmDetail;
+    }
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        statusCode.data = result;
+        res.send(statusCode);
+      }
+    });
   }
 };
 

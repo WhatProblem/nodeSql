@@ -41,4 +41,6 @@ module.exports = {
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',
   homeDetailFilter: '/home/homeDetailFilter', // homeDetailFilm部分
+  gameFavOrLock: '/home/gameFavOrLock', // 游戏人物收藏/加锁
+  filmDetail: '/film/filmDetail', // film详情
 }

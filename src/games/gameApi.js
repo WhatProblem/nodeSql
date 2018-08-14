@@ -223,6 +223,32 @@ const sqlFun = {
       item.game_avatar_poster = baseIp + item.game_avatar_poster;
     });
     return val;
+  },
+
+  /**
+  * @description: home部分的popGame加锁控制
+  * @param {game_id} 影片id
+  * @param {game_lock} 0:未加锁
+  * @param {game_favorite} 1: 收藏
+  * @param {user_id} 用户id
+  */
+  gameLockOrFav(req, res) {
+    let reqObj = null;
+    let ival = null;
+    let sqlInfo = null;
+    if (req && req.body.game_lock) {
+      reqObj = { game_lock: req.body.game_lock };
+    } else if (req.body.game_favorite) {
+      reqObj = { game_favorite: req.body.game_favorite };
+    }
+    ival = [reqObj, req.body.game_id, req.body.user_id];
+    sqlInfo = sql.changeGameLockOrFav;
+    commonSql.poolConn(sqlInfo, ival, (result) => {
+      if (result) {
+        statusCode.data = {};
+        res.send(statusCode);
+      }
+    })
   }
 }
 
