@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const commonSql = require('../db/commonSql.js');
 const sql = require('../db/sql.js');
+const author = require('../user/user.js');
 
 // 自定义状态码
 let statusCode = {
@@ -205,28 +206,74 @@ const filmFun = {
 
   /***********************ng2-lifeStyle部分数据*************************/
   /**
-   * @description: 获取home部分popFilm部分
-   * @param {film_score} 根据影片评分查询
-   */
+* @description: 获取home部分popFilm部分
+* @param {film_score} 根据影片评分查询
+*/
   getScoreFilm(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.query) {
-      reqObj = req.query.film_score;
-      ival = [reqObj];
-      sqlInfo = sql.getScoreVideo;
-    }
-    commonSql.poolConn(sqlInfo, ival, (result) => {
-      if (result) {
-        statusCode.data = {};
-        statusCode.data.totals = result.length;
-        result = filmFun.dealPicPath(result);
-        statusCode.data.data = result;
-        res.send(statusCode);
+    let user_id = null;
+    let filmFav = null;
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        reqObj = req.query.film_score;
+        ival = [reqObj];
+        sqlInfo = sql.getScoreVideo;
       }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      if (req && req.query) {
+        user_id = author.isAuthor(req).user_id;
+        reqObj = req.query.film_score;
+        ival = [reqObj];
+        sqlInfo = sql.getScoreVideo;
+      }
+    }
+    filmFun.findFav(user_id).then(resFilmFav => {
+      commonSql.poolConn(sqlInfo, ival, (result) => {
+        if (result) {
+          statusCode.data = {};
+          statusCode.data.totals = result.length;
+          result = filmFun.dealPicPath(result);
+          result.filter((item, index) => {
+            for (let i = 0; i < resFilmFav.length; i++) {
+              if (item['film_id'] == resFilmFav[i]['film_id_favorite']) {
+                item['film_favorite'] = '0';
+              }
+              if (item['film_id'] == resFilmFav[i]['film_id_lock']) {
+                item['film_lock'] = '1';
+              }
+            }
+          });
+          statusCode.data.data = result;
+          res.send(statusCode);
+        }
+      });
     });
   },
+
+  /**
+  * @description：查询关联表
+  */
+  findFav(user_id) {
+    let ival = ['favandlock', user_id];
+    let sqlInfo = sql.getUserFavOrLock;
+    return new Promise((resolve, reject) => {
+      if (user_id) {
+        commonSql.poolConn(sqlInfo, ival, result => {
+          if (result) {
+            resolve(result);
+          }
+        });
+      } else {
+        resolve([]);
+      }
+    })
+  },
+
+  /**
+   * @description: 查询关联表
+   */
 
   /**
    * @description: home部分的popFilm加锁控制

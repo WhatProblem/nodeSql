@@ -35,7 +35,9 @@ module.exports = {
   allSearchMusicTypeSql: 'SELECT *, COUNT(*) FROM musics WHERE music_type = ? AND (music_name LIKE ? OR music_desc LIKE ? OR music_area LIKE ? OR music_time LIKE ?)', // 模糊查询总数
 
   // home视频模块--ng2-lifeStyle
+  userInfo: 'SELECT * FROM users WHERE user_id = ? AND user_pwd = ?', // 用户查询，未加密
   getScoreVideo: 'SELECT * FROM films WHERE film_score >= ? ORDER BY create_date DESC', // 获取首页popFilm部分
+  getUserFavOrLock: 'SELECT * FROM ?? WHERE user_id = ?', // 获取关联表中的收藏
   getScoreAudio: 'SELECT * FROM musics WHERE music_score >= ? ORDER BY create_date DESC', // 获取首页popMusic部分
   getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
   changeLockOrFav: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // popFilm部分的收藏加锁
