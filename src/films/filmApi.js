@@ -237,11 +237,8 @@ const filmFun = {
           result = filmFun.dealPicPath(result);
           result.filter((item, index) => {
             for (let i = 0; i < resFilmFav.length; i++) {
-              if (item['film_id'] == resFilmFav[i]['film_id_favorite']) {
+              if (item['film_id'] == resFilmFav[i]['film_id']) {
                 item['film_favorite'] = '0';
-              }
-              if (item['film_id'] == resFilmFav[i]['film_id_lock']) {
-                item['film_lock'] = '1';
               }
             }
           });
@@ -256,7 +253,7 @@ const filmFun = {
   * @description：查询关联表
   */
   findFav(user_id) {
-    let ival = ['favandlock', user_id];
+    let ival = ['favtable', user_id];
     let sqlInfo = sql.getUserFavOrLock;
     return new Promise((resolve, reject) => {
       if (user_id) {
