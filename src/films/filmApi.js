@@ -238,7 +238,7 @@ const filmFun = {
             result.filter((item, index) => {
               for (let i = 0; i < resFilm[0].length; i++) {
                 if (item['film_id'] == resFilm[0][i]['film_id']) {
-                  item['film_favorite'] = '0';
+                  item['film_favorite'] = '1';
                 }
               }
             });
@@ -257,6 +257,7 @@ const filmFun = {
               }
             });
           }
+          statusCode.msg = 'successfully!';
           statusCode.code = 200;
           statusCode.data.data = result;
           res.send(statusCode);
@@ -356,14 +357,14 @@ const filmFun = {
           sqlInfo = sql.deleteFilmLockOrFav;
         }
       } else if (req.body.film_favorite) { // 收藏
-        if (req.body.film_favorite === '0') {
+        if (req.body.film_favorite === '1') {
           reqObj = {
             user_id: userId,
             film_id: filmId
           }
           ival = ['filmfav', reqObj];
           sqlInfo = sql.addfilmLockOrFav;
-        } else if (req.body.film_favorite === '1') {
+        } else if (req.body.film_favorite === '0') {
           ival = ['filmfav', userId, filmId];
           sqlInfo = sql.deleteFilmLockOrFav;
         }
