@@ -62,15 +62,17 @@ router.post(interfaceApi.loginLifeStyle, userInfo.loginLifeStyle);
 router.post(interfaceApi.logOutLifeStyle, userInfo.logOutLifeStyle)
 
 // home部分
-router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm);
-router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic);
-router.post(interfaceApi.popFilmLockOrFav, filmApi.filmLockOrFav);
+router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm); // 获取homePopFilm部分，添加账号权限
+router.post(interfaceApi.popFilmLockOrFav, filmApi.filmLockOrFav); // 控制收藏与加锁操作
 router.get(interfaceApi.filmDetail, filmApi.getFilmDetail); // filmDetail部分
-router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic);
-router.post(interfaceApi.popMusicFav, musicApi.musicFav);
-router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic);
-router.get(interfaceApi.homePopGame, gameApi.getPowerGame);
-router.post(interfaceApi.gameFavOrLock, gameApi.gameLockOrFav);
+router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic); // 图片路径对应获取
+
+router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic); // homePopMusic，添加账号权限
+router.post(interfaceApi.popMusicFav, musicApi.musicFav); // 收藏/取消 音乐
+router.get(interfaceApi.popMusicPoster, uploadApi.loadHomePopMusicPic); // 图片路径对应获取
+
+router.get(interfaceApi.homePopGame, gameApi.getPowerGame); // 获取homePopGame部分，添加账号权限
+router.post(interfaceApi.gameFavOrLock, gameApi.gameLockOrFav); // 控制收藏与加锁操作
 router.get(interfaceApi.popGamePoster, uploadApi.loadHomePopGamePic);
 
 // homeDetail

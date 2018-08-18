@@ -38,13 +38,17 @@ module.exports = {
   userInfo: 'SELECT * FROM users WHERE user_id = ? AND user_pwd = ?', // 用户查询，未加密
   getScoreVideo: 'SELECT * FROM films WHERE film_score >= ? ORDER BY create_date DESC', // 获取首页popFilm部分
   getUserFavOrLock: 'SELECT * FROM ?? WHERE user_id = ?', // 获取关联表中的收藏
+  addfilmLockOrFav: 'INSERT INTO ?? SET ?', // 插入收藏/加锁到关联表
+  deleteFilmLockOrFav: 'DELETE FROM ?? WHERE user_id = ? AND film_id = ?', // 删除收藏或加锁
   getScoreAudio: 'SELECT * FROM musics WHERE music_score >= ? ORDER BY create_date DESC', // 获取首页popMusic部分
   getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
-  changeLockOrFav: 'UPDATE films SET ? WHERE film_id = ? AND user_id = ?', // popFilm部分的收藏加锁
-  changMusicFav: 'UPDATE musics SET ? WHERE music_id = ? AND user_id = ?', // popMusic部分收藏
+  addMusicFav: 'INSERT INTO ?? SET ?', // 插入收藏到列表
+  deleteMusicFav: 'DELETE FROM ?? WHERE user_id = ? AND music_id = ?', // 删除收藏
   homeDetailFilm: 'SELECT * FROM films WHERE film_score LIKE ? AND film_time LIKE ? AND film_type LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailFilm部分
   homeDetailMusic: 'SELECT * FROM musics WHERE music_score LIKE ? AND music_time LIKE ? AND music_type LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailMusic部分
   homeDetailGame: 'SELECT * FROM games WHERE game_hero_score LIKE ? AND game_hero_type LIKE ? AND game_hero_degree LIKE ? AND user_id = ? ORDER BY create_date DESC LIMIT ?, ?', // 获取首页homeDetailGame部分
+  addGameLockOrFav: 'INSERT INTO ?? SET ?', // // 插入收藏/加锁到关联表
+  deleteGameLockOrFav: 'DELETE FROM ?? WHERE user_id = ? AND game_id = ?', // 删除加锁/收藏
   getFilmDetail: 'SELECT * FROM films WHERE film_id = ? AND user_id = ?', // 获取对应film_id详情
   changeGameLockOrFav: 'UPDATE games SET ? WHERE game_id = ? AND user_id = ?', // popFilm部分的收藏加锁
 }

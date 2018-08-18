@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2018-08-16 14:58:56
+-- Generation Time: 2018-08-18 05:00:44
 -- 服务器版本： 10.1.13-MariaDB
 -- PHP Version: 5.6.21
 
@@ -23,47 +23,68 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 表的结构 `favandlock`
+-- 表的结构 `filmfav`
 --
 
-CREATE TABLE `favandlock` (
-  `id` int(11) NOT NULL,
-  `film_id_favorite` varchar(50) DEFAULT NULL,
-  `film_id_lock` varchar(50) DEFAULT NULL,
-  `music_id_favorite` varchar(50) DEFAULT NULL,
-  `game_id_favorite` varchar(50) DEFAULT NULL,
-  `game_id_lock` varchar(50) DEFAULT NULL,
-  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_id` varchar(50) DEFAULT NULL
+CREATE TABLE `filmfav` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `film_id` varchar(100) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `favandlock`
+-- 转存表中的数据 `filmfav`
 --
 
-INSERT INTO `favandlock` (`id`, `film_id_favorite`, `film_id_lock`, `music_id_favorite`, `game_id_favorite`, `game_id_lock`, `create_date`, `user_id`) VALUES
-(1, '1', '1', '1', '1', '1', '2018-08-16 12:18:35', '0001');
+INSERT INTO `filmfav` (`user_id`, `film_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:46:49'),
+('0001', '2', '2018-08-18 01:46:49'),
+('0002', '1', '2018-08-18 01:46:49'),
+('0002', '2', '2018-08-18 01:46:49');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `favtable`
+-- 表的结构 `filmhistory`
 --
 
-CREATE TABLE `favtable` (
-  `id` int(11) NOT NULL,
-  `user_id` varchar(100) DEFAULT NULL,
+CREATE TABLE `filmhistory` (
+  `user_id` varchar(50) DEFAULT NULL,
   `film_id` varchar(100) DEFAULT NULL,
-  `music_id` varchar(100) DEFAULT NULL,
-  `game_id` varchar(100) DEFAULT NULL
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `favtable`
+-- 转存表中的数据 `filmhistory`
 --
 
-INSERT INTO `favtable` (`id`, `user_id`, `film_id`, `music_id`, `game_id`) VALUES
-(1, '0001', '1', '1', '1');
+INSERT INTO `filmhistory` (`user_id`, `film_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:47:27'),
+('0001', '2', '2018-08-18 01:47:27'),
+('0002', '1', '2018-08-18 01:47:27'),
+('0002', '2', '2018-08-18 01:47:27');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `filmlock`
+--
+
+CREATE TABLE `filmlock` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `film_id` varchar(100) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `filmlock`
+--
+
+INSERT INTO `filmlock` (`user_id`, `film_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:47:40'),
+('0001', '2', '2018-08-18 01:47:40'),
+('0002', '1', '2018-08-18 01:47:40'),
+('0002', '2', '2018-08-18 01:47:40');
 
 -- --------------------------------------------------------
 
@@ -107,6 +128,95 @@ INSERT INTO `films` (`film_id`, `film_type`, `film_score`, `film_desc`, `film_ar
 (11, '6', '8.2', '影片主要讲述清朝时期官官相护，状师宋世杰为有冤情的寡妇杨秀珍翻案的故事，于1992年7月2日在香港上映', '中国香港', '1', '审死官', '杜琪峰', '周星驰，梅艳芳，吴家丽，吴孟达，秦沛，黄一飞', '1992年7月', '0001', '用户1', '2018-06-24 09:19:30', '0', '/film/loadImg?poster=detail&filmId=11', '/film/loadImg?poster=banner&filmId=11', '0'),
 (12, '6', '9.6', '《豪门夜宴》是1991年由众多香港当红影星为帮助大陆水灾筹备善款而拍摄一部喜剧电影，其中客串的明星多达上百位。其于1991年上映，曾志伟、郑裕玲、洪金宝、吴耀汉等主演，讲述了曾小智努力获得巨额开发计划的故事。', '中国香港', '1', '豪门夜宴', '徐克', '曾志伟，郑裕玲，吴耀汉，洪金宝，林子祥，张学友，梁家辉，梁朝伟，许冠文，刘德华，周星驰，刘嘉玲，张曼玉，王祖贤', '1991', '0001', '用户1', '2018-06-24 09:19:23', '0', '/film/loadImg?poster=detail&filmId=12', '/film/loadImg?poster=banner&filmId=12', '0'),
 (13, '6', '8.3', '影片对美国谍战影片007系列进行恶搞创作，讲述了后备国家特工凌凌漆赶赴香港，进行从黑帮头目金枪人的手里夺回暴龙头骨的任务，最终用行动感化了原本与之对抗的金枪人手下女特务李香琴，成功完成任务的故事。', '中国香港', '1', '国产凌凌漆', '周星驰、李力持', '周星驰，袁咏仪，罗家英，陈宝莲，黄锦江，郑祖', '1994年9月', '0001', '用户1', '2018-06-24 09:19:19', '0', '/film/loadImg?poster=detail&filmId=13', '/film/loadImg?poster=banner&filmId=13', '0');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `filmtalk`
+--
+
+CREATE TABLE `filmtalk` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `film_id` varchar(100) DEFAULT NULL,
+  `film_talk_content` varchar(150) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `filmtalk`
+--
+
+INSERT INTO `filmtalk` (`user_id`, `film_id`, `film_talk_content`, `create_date`) VALUES
+('0001', '1', '这是影片评论1!!!', '2018-08-18 01:50:29'),
+('0001', '2', '这是影片评论2!!!', '2018-08-18 01:50:29'),
+('0002', '1', '这是影片评论1!!!', '2018-08-18 01:50:29'),
+('0002', '2', '这是影片评论2!!!', '2018-08-18 01:50:29');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `gamefav`
+--
+
+CREATE TABLE `gamefav` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `game_id` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `gamefav`
+--
+
+INSERT INTO `gamefav` (`user_id`, `game_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:51:59'),
+('0001', '2', '2018-08-18 01:51:59'),
+('0002', '1', '2018-08-18 01:51:59'),
+('0002', '2', '2018-08-18 01:51:59');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `gamehistory`
+--
+
+CREATE TABLE `gamehistory` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `game_id` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `gamehistory`
+--
+
+INSERT INTO `gamehistory` (`user_id`, `game_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:52:16'),
+('0001', '2', '2018-08-18 01:52:16'),
+('0002', '1', '2018-08-18 01:52:16'),
+('0002', '2', '2018-08-18 01:52:16');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `gamelock`
+--
+
+CREATE TABLE `gamelock` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `game_id` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `gamelock`
+--
+
+INSERT INTO `gamelock` (`user_id`, `game_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:52:57'),
+('0001', '2', '2018-08-18 01:52:57'),
+('0002', '1', '2018-08-18 01:52:57'),
+('0002', '2', '2018-08-18 01:52:57');
 
 -- --------------------------------------------------------
 
@@ -261,45 +371,46 @@ INSERT INTO `games` (`game_id`, `game_role`, `game_power`, `game_total`, `game_f
 -- --------------------------------------------------------
 
 --
--- 表的结构 `historytable`
+-- 表的结构 `musicfav`
 --
 
-CREATE TABLE `historytable` (
-  `id` int(11) NOT NULL,
-  `user_id` varchar(100) DEFAULT NULL,
-  `film_id` varchar(100) DEFAULT NULL,
-  `music_id` varchar(100) DEFAULT NULL,
-  `game_id` varchar(100) DEFAULT NULL
+CREATE TABLE `musicfav` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `music_id` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `historytable`
+-- 转存表中的数据 `musicfav`
 --
 
-INSERT INTO `historytable` (`id`, `user_id`, `film_id`, `music_id`, `game_id`) VALUES
-(1, '0001', '1', '1', '1');
+INSERT INTO `musicfav` (`user_id`, `music_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:53:22'),
+('0001', '2', '2018-08-18 01:53:22'),
+('0002', '1', '2018-08-18 01:53:22'),
+('0002', '2', '2018-08-18 01:53:22');
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `locktable`
+-- 表的结构 `musichistory`
 --
 
-CREATE TABLE `locktable` (
-  `id` int(11) NOT NULL,
-  `user_id` varchar(100) DEFAULT NULL,
-  `film_id` varchar(100) DEFAULT NULL,
-  `game_id` varchar(100) DEFAULT NULL
+CREATE TABLE `musichistory` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `music_id` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `locktable`
+-- 转存表中的数据 `musichistory`
 --
 
-INSERT INTO `locktable` (`id`, `user_id`, `film_id`, `game_id`) VALUES
-(1, '0001', '1', '1'),
-(2, '0001', '2', '2'),
-(3, '0002', '1', '1');
+INSERT INTO `musichistory` (`user_id`, `music_id`, `create_date`) VALUES
+('0001', '1', '2018-08-18 01:53:38'),
+('0001', '2', '2018-08-18 01:53:38'),
+('0002', '1', '2018-08-18 01:53:38'),
+('0002', '2', '2018-08-18 01:53:38');
 
 -- --------------------------------------------------------
 
@@ -372,18 +483,6 @@ INSERT INTO `users` (`id`, `user_id`, `user_pwd`) VALUES
 --
 
 --
--- Indexes for table `favandlock`
---
-ALTER TABLE `favandlock`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `favtable`
---
-ALTER TABLE `favtable`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `films`
 --
 ALTER TABLE `films`
@@ -394,18 +493,6 @@ ALTER TABLE `films`
 --
 ALTER TABLE `games`
   ADD PRIMARY KEY (`game_id`);
-
---
--- Indexes for table `historytable`
---
-ALTER TABLE `historytable`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `locktable`
---
-ALTER TABLE `locktable`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `musics`
@@ -424,16 +511,6 @@ ALTER TABLE `users`
 --
 
 --
--- 使用表AUTO_INCREMENT `favandlock`
---
-ALTER TABLE `favandlock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- 使用表AUTO_INCREMENT `favtable`
---
-ALTER TABLE `favtable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
 -- 使用表AUTO_INCREMENT `films`
 --
 ALTER TABLE `films`
@@ -443,16 +520,6 @@ ALTER TABLE `films`
 --
 ALTER TABLE `games`
   MODIFY `game_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
---
--- 使用表AUTO_INCREMENT `historytable`
---
-ALTER TABLE `historytable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- 使用表AUTO_INCREMENT `locktable`
---
-ALTER TABLE `locktable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- 使用表AUTO_INCREMENT `musics`
 --

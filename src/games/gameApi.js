@@ -1,12 +1,11 @@
 const express = require('express');
 const app = express();
-// const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const querystring = require('querystring');
-// const bodyParser = require('body-parser');
 const commonSql = require('../db/commonSql.js');
 const sql = require('../db/sql.js');
+const author = require('../user/user.js');
 
 // 自定义状态码
 let statusCode = {
@@ -193,27 +192,100 @@ const sqlFun = {
 
   /***********************ng2-lifeStyle部分数据*************************/
   /**
-   * @description: 获取home部分popGame部分
-   * @param {game_power} 根据影片评分查询
-   */
+    * @description: 获取home部分popGame部分
+    * @param {game_power} 根据影片评分查询
+    * @param {user_id} 登录权限
+    */
   getPowerGame(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.query) {
-      reqObj = req.query.game_power;
-      ival = [reqObj];
-      sqlInfo = sql.getGameDetail;
+    let user_id = null;
+
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        reqObj = req.query.game_power;
+        ival = [reqObj];
+        sqlInfo = sql.getGameDetail;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      if (req && req.query) {
+        user_id = author.isAuthor(req).user_id;
+        reqObj = req.query.game_power;
+        ival = [reqObj];
+        sqlInfo = sql.getGameDetail;
+      }
     }
     commonSql.poolConn(sqlInfo, ival, (result) => {
       if (result) {
-        statusCode.data = {};
-        statusCode.data.totals = result.length;
-        result = sqlFun.dealPicPath(result);
-        statusCode.data.data = result;
-        res.send(statusCode);
+        sqlFun.findGameInfo(user_id, 'gamefav', 'gamelock', 'gamehistory').then(resGame => {
+          statusCode.data = {};
+          statusCode.data.totals = result.length;
+          result = sqlFun.dealPicPath(result);
+          if (resGame.length) {
+            result.filter((item, index) => {
+              for (let i = 0; i < resGame[0].length; i++) {
+                if (item['game_id'] == resGame[0][i]['game_id']) {
+                  item['game_favorite'] = '1';
+                }
+              }
+            });
+            result.filter((item, index) => {
+              for (let i = 0; i < resGame[1].length; i++) {
+                if (item['game_id'] == resGame[1][i]['game_id']) {
+                  item['game_lock'] = '1';
+                }
+              }
+            });
+            result.filter((item, index) => {
+              for (let i = 0; i < resGame[2].length; i++) {
+                if (item['game_id'] == resGame[2][i]['game_id']) {
+                  item['game_history'] = '1';
+                }
+              }
+            });
+          }
+          statusCode.code = 200;
+          statusCode.msg = 'successfully!';
+          statusCode.data.data = result;
+          res.send(statusCode);
+        });
       }
     });
+  },
+
+  /**
+    * @description：查询关联表
+    */
+  findGameInfo(user_id, ...table) {
+    let ivalFav = [table[0], user_id];
+    let ivalLock = [table[1], user_id];
+    let ivalHistory = [table[2], user_id];
+    let sqlInfo = sql.getUserFavOrLock;
+
+    let promiseFav = new Promise((resolve, reject) => { // 收藏
+      commonSql.poolConn(sqlInfo, ivalFav, resFav => {
+        resolve(resFav);
+      });
+    });
+
+    let promiseLock = new Promise((resolve, reject) => { // 收藏
+      commonSql.poolConn(sqlInfo, ivalLock, resLock => {
+        resolve(resLock);
+      });
+    });
+
+    let promiseHistory = new Promise((resolve, reject) => { // 浏览历史
+      commonSql.poolConn(sqlInfo, ivalHistory, resHistory => {
+        resolve(resHistory);
+      });
+    });
+
+    if (user_id) {
+      return Promise.all([promiseFav, promiseLock, promiseHistory]);
+    } else {
+      return Promise.resolve([]);
+    }
   },
 
   // 处理图片路径方法
@@ -226,25 +298,60 @@ const sqlFun = {
   },
 
   /**
-  * @description: home部分的popGame加锁控制
-  * @param {game_id} 影片id
-  * @param {game_lock} 0:未加锁
-  * @param {game_favorite} 1: 收藏
-  * @param {user_id} 用户id
-  */
+    * @description: home部分的popGame加锁控制
+    * @param {game_id} 影片id
+    * @param {game_lock} 0:未加锁
+    * @param {game_favorite} 1: 收藏
+    * @param {user_id} 用户id
+    */
   gameLockOrFav(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.body.game_lock) {
-      reqObj = { game_lock: req.body.game_lock };
-    } else if (req.body.game_favorite) {
-      reqObj = { game_favorite: req.body.game_favorite };
+    let userId = null;
+    let gameId = null;
+
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        statusCode.data = {};
+        statusCode.code = 511;
+        statusCode.msg = '请先登录!';
+        res.send(statusCode);
+        return;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      userId = author.isAuthor(req).user_id;
+      gameId = req.body.game_id;
+      if (req && req.body.game_lock) {
+        if (req.body.game_lock === '1') { // 加锁
+          reqObj = {
+            user_id: userId,
+            game_id: gameId
+          }
+          ival = ['gamelock', reqObj];
+          sqlInfo = sql.addGameLockOrFav;
+        } else if (req.body.game_lock === '0') {
+          ival = ['gamelock', userId, gameId];
+          sqlInfo = sql.deleteGameLockOrFav;
+        }
+      } else if (req.body.game_favorite) { // 收藏
+        if (req.body.game_favorite === '1') {
+          reqObj = {
+            user_id: userId,
+            game_id: gameId
+          }
+          ival = ['gamefav', reqObj];
+          sqlInfo = sql.addGameLockOrFav;
+        } else if (req.body.game_favorite === '0') {
+          ival = ['gamefav', userId, gameId];
+          sqlInfo = sql.deleteGameLockOrFav;
+        }
+      }
     }
-    ival = [reqObj, req.body.game_id, req.body.user_id];
-    sqlInfo = sql.changeGameLockOrFav;
     commonSql.poolConn(sqlInfo, ival, (result) => {
       if (result) {
+        statusCode.code = 200;
+        statusCode.msg = 'successfully!';
         statusCode.data = {};
         res.send(statusCode);
       }

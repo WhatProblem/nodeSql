@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const commonSql = require('../db/commonSql.js');
 const sql = require('../db/sql.js');
-
+const author = require('../user/user.js');
 
 // 自定义状态码
 let statusCode = {
@@ -205,47 +205,133 @@ const musicFun = {
 
   /***********************ng2-lifeStyle部分数据*************************/
   /**
-   * @description: 获取home部分popFilm部分
-   * @param {music_score} 根据影片评分查询
-   */
+    * @description: 获取home部分popFilm部分
+    * @param {music_score} 根据影片评分查询
+    * @param {user_id} 已登录要传user_id
+    */
   getScoreMusic(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.query) {
-      reqObj = req.query.music_score;
-      ival = [reqObj];
-      sqlInfo = sql.getScoreAudio;
+    let user_id = null;
+
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        reqObj = req.query.music_score;
+        ival = [reqObj];
+        sqlInfo = sql.getScoreAudio;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      if (req && req.query) {
+        user_id = author.isAuthor(req).user_id;
+        reqObj = req.query.music_score;
+        ival = [reqObj];
+        sqlInfo = sql.getScoreAudio;
+      }
     }
-    commonSql.poolConn(sqlInfo, ival, (result) => {
+
+    commonSql.poolConn(sqlInfo, ival, result => {
       if (result) {
-        statusCode.data = {};
-        statusCode.data.totals = result.length;
-        result = musicFun.dealPicPath(result);
-        statusCode.data.data = result;
-        res.send(statusCode);
+        musicFun.findMusicInfo(user_id, 'musicfav', 'musichistory').then(resMusic => {
+          statusCode.data = {};
+          statusCode.data.totals = result.length;
+          result = musicFun.dealPicPath(result);
+          if (resMusic.length) {
+            result.filter((item, index) => {
+              for (let i = 0; i < resMusic[0].length; i++) {
+                if (item['music_id'] == resMusic[0][i]['music_id']) {
+                  item['music_favorite'] = '1';
+                }
+              }
+            });
+            result.filter((item, index) => {
+              for (let i = 0; i < resMusic[1].length; i++) {
+                if (item['music_id'] == resMusic[1][i]['music_id']) {
+                  item['music_history'] = '1';
+                }
+              }
+            });
+          }
+          statusCode.code = 200;
+          statusCode.msg = 'successfully!';
+          statusCode.data.data = result;
+          res.send(statusCode);
+        });
       }
     });
   },
 
   /**
-   * @description: popMusic部分收藏
-   * @param {music_id} 
-   * @param {user_id}
-   * @param {music_favorite}
-   */
+    * @description：查询关联表
+    */
+  findMusicInfo(user_id, ...table) {
+    let ivalFav = [table[0], user_id];
+    let ivalHistory = [table[1], user_id];
+    let sqlInfo = sql.getUserFavOrLock;
+
+    let promiseFav = new Promise((resolve, reject) => { // 收藏
+      commonSql.poolConn(sqlInfo, ivalFav, resFav => {
+        resolve(resFav);
+      });
+    });
+
+    let promiseHistory = new Promise((resolve, reject) => { // 浏览历史
+      commonSql.poolConn(sqlInfo, ivalHistory, resHistory => {
+        resolve(resHistory);
+      });
+    });
+
+    if (user_id) {
+      return Promise.all([promiseFav, promiseHistory]);
+    } else {
+      return Promise.resolve([]);
+    }
+  },
+
+  /**
+    * @description: popMusic部分收藏
+    * @param {music_id} 
+    * @param {user_id}
+    * @param {music_favorite}
+    */
   musicFav(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.body.music_favorite) {
-      reqObj = { music_favorite: req.body.music_favorite };
-      ival = [reqObj, req.body.music_id, req.body.user_id];
-      sqlInfo = sql.changMusicFav
+    let userId = null;
+    let musicId = null;
+
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        statusCode.data = {};
+        statusCode.code = 511;
+        statusCode.msg = '请先登录!';
+        res.send(statusCode);
+        return;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      userId = author.isAuthor(req).user_id;
+      musicId = req.body.music_id;
+      if (req.body.music_favorite) { // 收藏
+        if (req.body.music_favorite === '1') {
+          reqObj = {
+            user_id: userId,
+            music_id: musicId
+          }
+          ival = ['musicfav', reqObj];
+          sqlInfo = sql.addMusicFav;
+        } else if (req.body.music_favorite === '0') {
+          ival = ['musicfav', userId, musicId];
+          sqlInfo = sql.deleteMusicFav;
+        }
+      }
     }
+
     commonSql.poolConn(sqlInfo, ival, result => {
       if (result) {
+        statusCode.code = 200;
         statusCode.data = {};
+        statusCode.msg = 'successfully!';
         res.send(statusCode);
       }
     })

@@ -206,15 +206,14 @@ const filmFun = {
 
   /***********************ng2-lifeStyle部分数据*************************/
   /**
-* @description: 获取home部分popFilm部分
-* @param {film_score} 根据影片评分查询
-*/
+  * @description: 获取home部分popFilm部分
+  * @param {film_score} 根据影片评分查询
+  */
   getScoreFilm(req, res) {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
     let user_id = null;
-    let filmFav = null;
     if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
       if (req && req.query) {
         reqObj = req.query.film_score;
@@ -229,24 +228,73 @@ const filmFun = {
         sqlInfo = sql.getScoreVideo;
       }
     }
-    filmFun.findFav(user_id).then(resFilmFav => {
-      commonSql.poolConn(sqlInfo, ival, (result) => {
-        if (result) {
+    commonSql.poolConn(sqlInfo, ival, result => {
+      if (result) {
+        filmFun.findFilmInfo(user_id, 'filmfav', 'filmlock', 'filmhistory').then(resFilm => {
           statusCode.data = {};
           statusCode.data.totals = result.length;
           result = filmFun.dealPicPath(result);
-          result.filter((item, index) => {
-            for (let i = 0; i < resFilmFav.length; i++) {
-              if (item['film_id'] == resFilmFav[i]['film_id']) {
-                item['film_favorite'] = '0';
+          if (resFilm.length) {
+            result.filter((item, index) => {
+              for (let i = 0; i < resFilm[0].length; i++) {
+                if (item['film_id'] == resFilm[0][i]['film_id']) {
+                  item['film_favorite'] = '0';
+                }
               }
-            }
-          });
+            });
+            result.filter((item, index) => {
+              for (let i = 0; i < resFilm[1].length; i++) {
+                if (item['film_id'] == resFilm[1][i]['film_id']) {
+                  item['film_lock'] = '1';
+                }
+              }
+            });
+            result.filter((item, index) => {
+              for (let i = 0; i < resFilm[2].length; i++) {
+                if (item['film_id'] == resFilm[2][i]['film_id']) {
+                  item['film_lock'] = '1';
+                }
+              }
+            });
+          }
+          statusCode.code = 200;
           statusCode.data.data = result;
           res.send(statusCode);
-        }
+        });
+      }
+    })
+  },
+
+  /**
+* @description：查询关联表
+*/
+  findFilmInfo(user_id, ...table) {
+    let ivalFav = [table[0], user_id];
+    let ivalLock = [table[1], user_id];
+    let ivalHistory = [table[2], user_id];
+    let sqlInfo = sql.getUserFavOrLock;
+
+    let promiseFav = new Promise((resolve, reject) => { // 收藏
+      commonSql.poolConn(sqlInfo, ivalFav, resFav => {
+        resolve(resFav);
       });
     });
+    let promiseLock = new Promise((resolve, reject) => { // 加锁
+      commonSql.poolConn(sqlInfo, ivalLock, resLock => {
+        resolve(resLock);
+      });
+    });
+    let promiseHistory = new Promise((resolve, reject) => { // 浏览历史
+      commonSql.poolConn(sqlInfo, ivalHistory, resHistory => {
+        resolve(resHistory);
+      });
+    });
+
+    if (user_id) {
+      return Promise.all([promiseFav, promiseLock, promiseHistory]);
+    } else {
+      return Promise.resolve([]);
+    }
   },
 
   /**
@@ -270,9 +318,6 @@ const filmFun = {
 
   /**
    * @description: 查询关联表
-   */
-
-  /**
    * @description: home部分的popFilm加锁控制
    * @param {film_id} 影片id
    * @param {film_lock} 0:未加锁
@@ -284,13 +329,47 @@ const filmFun = {
     let reqObj = null;
     let ival = null;
     let sqlInfo = null;
-    if (req && req.body.film_lock) {
-      reqObj = { film_lock: req.body.film_lock };
-    } else if (req.body.film_favorite) {
-      reqObj = { film_favorite: req.body.film_favorite };
+    let userId = null;
+    let filmId = null;
+
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req && req.query) {
+        statusCode.data = {};
+        statusCode.code = 511;
+        statusCode.msg = '请先登录!';
+        res.send(statusCode);
+        return;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      userId = author.isAuthor(req).user_id;
+      filmId = req.body.film_id;
+      if (req && req.body.film_lock) {
+        if (req.body.film_lock === '1') { // 加锁
+          reqObj = {
+            user_id: userId,
+            film_id: filmId
+          }
+          ival = ['filmlock', reqObj];
+          sqlInfo = sql.addfilmLockOrFav;
+        } else if (req.body.film_lock === '0') {
+          ival = ['filmlock', userId, filmId];
+          sqlInfo = sql.deleteFilmLockOrFav;
+        }
+      } else if (req.body.film_favorite) { // 收藏
+        if (req.body.film_favorite === '0') {
+          reqObj = {
+            user_id: userId,
+            film_id: filmId
+          }
+          ival = ['filmfav', reqObj];
+          sqlInfo = sql.addfilmLockOrFav;
+        } else if (req.body.film_favorite === '1') {
+          ival = ['filmfav', userId, filmId];
+          sqlInfo = sql.deleteFilmLockOrFav;
+        }
+      }
     }
-    ival = [reqObj, req.body.film_id, req.body.user_id];
-    sqlInfo = sql.changeLockOrFav;
+
     commonSql.poolConn(sqlInfo, ival, (result) => {
       if (result) {
         statusCode.data = {};
