@@ -66,6 +66,7 @@ router.get(interfaceApi.homePopFilm, filmApi.getScoreFilm); // 获取homePopFilm
 router.post(interfaceApi.popFilmLockOrFav, filmApi.filmLockOrFav); // 控制收藏与加锁操作
 router.get(interfaceApi.filmDetail, filmApi.getFilmDetail); // filmDetail部分
 router.get(interfaceApi.popFilmPoster, uploadApi.loadHomePopFilmPic); // 图片路径对应获取
+// router.post(interfaceApi.doFilmScore, filmApi.doFilmScore); // 影片评分
 
 router.get(interfaceApi.homePopMusic, musicApi.getScoreMusic); // homePopMusic，添加账号权限
 router.post(interfaceApi.popMusicFav, musicApi.musicFav); // 收藏/取消 音乐

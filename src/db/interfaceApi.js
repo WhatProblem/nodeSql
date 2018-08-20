@@ -36,11 +36,15 @@ module.exports = {
   popFilmPoster: '/film/loadImg', // 图片获取，get
   homePopMusic: '/home/homePopMusic',
   popFilmLockOrFav: '/home/popFilmLockOrFav', // 加锁/收藏控制，post
+  doFilmScore: '/film/doFilmScore', // 影片评分
+
   popMusicPoster: '/music/loadImg',
   popMusicFav: '/home/popMusicFav', // 音乐收藏，post
+
   homePopGame: '/home/homePopGame',
   popGamePoster: '/game/loadImg',
   homeDetailFilter: '/home/homeDetailFilter', // homeDetailFilm部分
   gameFavOrLock: '/home/gameFavOrLock', // 游戏人物收藏/加锁
+  
   filmDetail: '/film/filmDetail', // film详情
 }

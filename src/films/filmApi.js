@@ -456,6 +456,64 @@ const filmFun = {
         res.send(statusCode);
       }
     });
+  },
+
+  /**
+   * @description: 影片评分
+   * @param {film_id}
+   * @param {film_score}
+   * @param {user_id}
+   */
+  doFilmScore(req, res) {
+    let ival = null;
+    let reqObj = null;
+    let sqlInfo = null;
+    let userId = null;
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req) {
+        statusCode.data = {};
+        statusCode.code = 511;
+        statusCode.msg = '请先登录!';
+        res.send(statusCode);
+        return;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      userId = author.isAuthor(req).user_id;
+      sqlInfo = sql.findFilmScore;
+      ival = [req.body.film_id, userId];
+
+      filmFun.findFilmScore(sqlInfo, ival).then(res => {
+        if (res.length) {
+          sqlInfo = sql.addFilmScore;
+          reqObj = {
+            user_id: userId,
+            film_id: req.body.film_id,
+            film_score: req.body.film_score
+          }
+          ival = ['filmscore', reqObj];
+          commonSql.poolConn(sqlInfo, ival, results => {
+            if (results) {
+
+            }
+          });
+        }
+      });
+    }
+  },
+
+  /**
+   * @description: 查询filmscore数据
+   * @param {user_id}
+   * @param {film_id}
+   */
+  async findFilmScore(sqlInfo, ival) {
+    let result = null;
+    await commonSql.poolConn(sqlInfo, ival, res => {
+      if (res) {
+        result = res;
+      }
+    });
+    return result;
   }
 };
 

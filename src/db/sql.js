@@ -39,6 +39,10 @@ module.exports = {
   getScoreVideo: 'SELECT * FROM films WHERE film_score >= ? ORDER BY create_date DESC', // 获取首页popFilm部分
   getUserFavOrLock: 'SELECT * FROM ?? WHERE user_id = ?', // 获取关联表中的收藏
   addfilmLockOrFav: 'INSERT INTO ?? SET ?', // 插入收藏/加锁到关联表
+  updateFilmScore: 'UPDATE filmscore SET ? WHERE film_id = ? AND user_id = ?', // 更新评分
+  updateFilms: 'UPDATE films SET ? WHERE film_id = ?', // 更新films表的评分
+  findFilmScore: 'SELECT * FROM filmscore WHERE film_id = ? AND user_id = ?', // 查询filmScore表
+  addFilmScore: 'INSERT INTO ?? SET ?', // 添加影片评分
   deleteFilmLockOrFav: 'DELETE FROM ?? WHERE user_id = ? AND film_id = ?', // 删除收藏或加锁
   getScoreAudio: 'SELECT * FROM musics WHERE music_score >= ? ORDER BY create_date DESC', // 获取首页popMusic部分
   getGameDetail: 'SELECT * FROM games WHERE game_power >= ? ORDER BY create_date DESC', // 获取首页popGame部分
