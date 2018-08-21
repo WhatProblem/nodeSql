@@ -439,10 +439,10 @@ const filmFun = {
   },
 
   /**
-* @description: 获取影片详情
-* @param {user_id}
-* @param {film_id}
-*/
+   * @description: 获取影片详情
+   * @param {user_id}
+   * @param {film_id}
+   */
   getFilmDetail(req, res) {
     let ival = null;
     let sqlInfo = null;
@@ -452,6 +452,8 @@ const filmFun = {
     }
     commonSql.poolConn(sqlInfo, ival, (result) => {
       if (result) {
+        statusCode.code = 200;
+        statusCode.msg = 'successfully!';
         statusCode.data = result;
         res.send(statusCode);
       }
@@ -469,6 +471,7 @@ const filmFun = {
     let reqObj = null;
     let sqlInfo = null;
     let userId = null;
+    let mainFilmScore = null;
     if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
       if (req) {
         statusCode.data = {};
@@ -482,8 +485,8 @@ const filmFun = {
       sqlInfo = sql.findFilmScore;
       ival = [req.body.film_id, userId];
 
-      filmFun.findFilmScore(sqlInfo, ival).then(res => {
-        if (res.length) {
+      filmFun.filmScoreOrTalk(sqlInfo, ival).then(resFilmscore => { // 查询filmscore，是否存在当前账号当前影片
+        if (!resFilmscore.length) { // 不存在，插入一条评分数据
           sqlInfo = sql.addFilmScore;
           reqObj = {
             user_id: userId,
@@ -491,12 +494,36 @@ const filmFun = {
             film_score: req.body.film_score
           }
           ival = ['filmscore', reqObj];
-          commonSql.poolConn(sqlInfo, ival, results => {
-            if (results) {
-
-            }
-          });
+        } else { // 更新一条影片评分
+          sqlInfo = sql.updateFilmScore;
+          reqObj = {
+            film_score: req.body.film_score
+          }
+          ival = [reqObj, req.body.film_id, userId];
         }
+        filmFun.filmScoreOrTalk(sqlInfo, ival).then(resp => { // 插入评分数据或者更新一条影评
+          if (resp) {
+            sqlInfo = sql.filmScore;
+            ival = [req.body.film_id];
+            filmFun.filmScoreOrTalk(sqlInfo, ival).then(resps => { // 获取所有当前影片评分
+              if (resps) {
+                mainFilmScore = filmFun.averageScore(resps);
+                sqlInfo = sql.updateFilms;
+                reqObj = { film_score: mainFilmScore }
+                ival = [reqObj, req.body.film_id];
+                filmFun.filmScoreOrTalk(sqlInfo, ival).then(respes => { // 将平均值写入films主表
+                  if (respes) {
+                    statusCode.code = 200;
+                    statusCode.data = mainFilmScore;
+                    statusCode.msg = 'successfully!';
+                    res.send(statusCode);
+                  }
+                });
+              }
+            });
+          }
+        });
+
       });
     }
   },
@@ -506,14 +533,103 @@ const filmFun = {
    * @param {user_id}
    * @param {film_id}
    */
-  async findFilmScore(sqlInfo, ival) {
-    let result = null;
-    await commonSql.poolConn(sqlInfo, ival, res => {
-      if (res) {
-        result = res;
-      }
+  filmScoreOrTalk(sqlInfo, ival) {
+    return new Promise((resolve, reject) => {
+      commonSql.poolConn(sqlInfo, ival, res => {
+        if (res) {
+          resolve(res)
+        }
+      });
     });
-    return result;
+  },
+
+  // 平均分--影评
+  averageScore(val) {
+    let totalScore = 0;
+    for (let i = 0; i < val.length; i++) {
+      totalScore += parseFloat(val[i]['film_score']);
+    }
+    return (parseFloat(totalScore) / (val.length)).toFixed(1);
+  },
+
+  /**
+  * @description: 影片评论
+  * @param {film_id}
+  */
+  getFilmTalk(req, res) {
+    let sqlInfo = null;
+    let reqObj = null;
+    let ival = null;
+    if (req) {
+      sqlInfo = sql.filmTalk;
+      ival = [req.query.film_id];
+      commonSql.poolConn(sqlInfo, ival, result => {
+        if (result) {
+          statusCode.data = {};
+          statusCode.totals = result.length;
+          statusCode.code = 200;
+          statusCode.data.data = result;
+          statusCode.msg = 'successfully!';
+          res.send(statusCode);
+        }
+      });
+    }
+  },
+
+  /**
+   * @description: 添加影片评论
+   * @param {film_id}
+   * @param {user_id}
+   * @param {film_talk_content}
+   */
+  doFilmTalk(req, res) {
+    let ival = null;
+    let reqObj = null;
+    let sqlInfo = null;
+    let userId = null;
+    let filmTalkContent = null;
+    if (author.isAuthor(req).status === 'UNLOGIN' || author.isAuthor(req).status === 'OVERTIME_LOGIN' || author.isAuthor(req).status === 'FORGEY_LOGIN') { // 未登录
+      if (req) {
+        statusCode.totals = null;
+        statusCode.data = {};
+        statusCode.code = 511;
+        statusCode.msg = '请先登录!';
+        res.send(statusCode);
+        return;
+      }
+    } else if (author.isAuthor(req).status === 'LOGINED') {
+      userId = author.isAuthor(req).user_id;
+      sqlInfo = sql.findFilmTalk;
+      ival = [req.body.film_id, userId];
+
+      filmFun.filmScoreOrTalk(sqlInfo, ival).then(resFilmtalk => { // 查询filmscore，是否存在当前账号当前影片
+        if (!resFilmtalk.length) { // 不存在，插入一条评分数据
+          sqlInfo = sql.addFilmTalk;
+          reqObj = {
+            user_id: userId,
+            film_id: req.body.film_id,
+            film_talk_content: req.body.film_talk_content
+          }
+          ival = ['filmtalk', reqObj];
+        } else { // 更新一条影片评分
+          sqlInfo = sql.updateFilmTalk;
+          reqObj = {
+            film_talk_content: req.body.film_talk_content
+          }
+          ival = [reqObj, req.body.film_id, userId];
+        }
+        filmFun.filmScoreOrTalk(sqlInfo, ival).then(resp => { // 插入评分数据或者更新一条影评
+          if (resp) {
+            statusCode.totals = null;
+            statusCode.code = 200;
+            statusCode.data = {};
+            statusCode.msg = 'successfully!';
+            res.send(statusCode);
+          }
+        });
+
+      });
+    }
   }
 };
 

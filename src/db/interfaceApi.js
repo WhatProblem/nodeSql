@@ -37,6 +37,8 @@ module.exports = {
   homePopMusic: '/home/homePopMusic',
   popFilmLockOrFav: '/home/popFilmLockOrFav', // 加锁/收藏控制，post
   doFilmScore: '/film/doFilmScore', // 影片评分
+  getFilmTalk: '/film/getFilmTalk', // 影片评语
+  doFilmTalk: '/film/doFilmTalk', // 评论影片
 
   popMusicPoster: '/music/loadImg',
   popMusicFav: '/home/popMusicFav', // 音乐收藏，post
@@ -45,6 +47,6 @@ module.exports = {
   popGamePoster: '/game/loadImg',
   homeDetailFilter: '/home/homeDetailFilter', // homeDetailFilm部分
   gameFavOrLock: '/home/gameFavOrLock', // 游戏人物收藏/加锁
-  
+
   filmDetail: '/film/filmDetail', // film详情
 }
